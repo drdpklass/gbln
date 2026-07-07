@@ -1,0 +1,1169 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>GBLN — Global Business Laboratory Network</title>
+<meta name="description" content="The world's first AI-powered business laboratory network. Learning business by doing business.">
+
+<style>
+/* ============================================================
+   GBLN — DESIGN TOKENS
+   Palette:  --ink (near-black base), --panel (glass panel base),
+             --teal (laboratory accent, primary), --brass (academic
+             accent, sparing use), --text / --text-dim (type)
+   Type:     Display = serif (academic gravitas), Body = system
+             sans (grotesk), Mono = utility/data labels
+   Signature: animated "specimen network" — nodes + connective
+             tissue in the hero, echoed as corner-bracket tags on
+             lab/simulation cards (lab-label vocabulary throughout)
+   ============================================================ */
+:root{
+  --ink:#080b11;
+  --ink-2:#0d121a;
+  --panel:#0f1520;
+  --panel-2:#131b28;
+  --line: rgba(233,238,244,0.09);
+  --line-strong: rgba(233,238,244,0.16);
+  --glass: rgba(255,255,255,0.035);
+  --glass-strong: rgba(255,255,255,0.06);
+  --teal:#2ad9ae;
+  --teal-dim: rgba(42,217,174,0.14);
+  --brass:#d2a857;
+  --brass-dim: rgba(210,168,87,0.14);
+  --text:#e9eef4;
+  --text-dim:#8d99a8;
+  --text-faint:#5c6878;
+  --serif: Georgia, 'Iowan Old Style', 'Palatino Linotype', 'Times New Roman', serif;
+  --sans: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+  --mono: 'SF Mono', 'Courier New', Consolas, monospace;
+  --ease: cubic-bezier(.22,.61,.36,1);
+  --container: 1240px;
+}
+
+*{margin:0;padding:0;box-sizing:border-box;}
+html{scroll-behavior:smooth;}
+body{
+  background:var(--ink);
+  color:var(--text);
+  font-family:var(--sans);
+  font-size:16px;
+  line-height:1.6;
+  overflow-x:hidden;
+  -webkit-font-smoothing:antialiased;
+}
+@media (prefers-reduced-motion: reduce){
+  *{animation-duration:0.01ms !important; animation-iteration-count:1 !important; transition-duration:0.01ms !important; scroll-behavior:auto !important;}
+}
+
+a{color:inherit;text-decoration:none;}
+ul{list-style:none;}
+button{font-family:inherit;cursor:pointer;border:none;background:none;color:inherit;}
+img{max-width:100%;display:block;}
+:focus-visible{outline:2px solid var(--teal);outline-offset:3px;}
+
+.wrap{max-width:var(--container);margin:0 auto;padding:0 32px;}
+.eyebrow{
+  font-family:var(--mono);
+  font-size:12px;
+  letter-spacing:.14em;
+  text-transform:uppercase;
+  color:var(--teal);
+  display:inline-flex;
+  align-items:center;
+  gap:10px;
+  margin-bottom:18px;
+}
+.eyebrow::before{
+  content:'';
+  width:20px;height:1px;
+  background:var(--teal);
+  display:inline-block;
+}
+h1,h2,h3,h4{font-family:var(--serif);font-weight:400;letter-spacing:-0.01em;}
+.section-head{max-width:680px;margin-bottom:56px;}
+.section-head h2{font-size:clamp(28px,3.6vw,44px);line-height:1.15;color:var(--text);}
+.section-head p{color:var(--text-dim);margin-top:16px;font-size:17px;max-width:560px;}
+.section{padding:120px 0;position:relative;}
+.section-alt{background:linear-gradient(180deg, var(--ink-2), var(--ink));}
+.divider{height:1px;background:linear-gradient(90deg, transparent, var(--line-strong), transparent);}
+
+/* Buttons */
+.btn{
+  position:relative;
+  overflow:hidden;
+  display:inline-flex;
+  align-items:center;
+  gap:10px;
+  padding:14px 28px;
+  border-radius:8px;
+  font-size:14.5px;
+  font-weight:600;
+  letter-spacing:.01em;
+  transition:transform .35s var(--ease), box-shadow .35s var(--ease), background .35s var(--ease), border-color .35s var(--ease);
+  white-space:nowrap;
+}
+.btn-primary{
+  background:var(--teal);
+  color:#06120e;
+}
+.btn-primary:hover{transform:translateY(-2px); box-shadow:0 14px 30px -10px rgba(42,217,174,.55);}
+.btn-ghost{
+  background:var(--glass);
+  border:1px solid var(--line-strong);
+  color:var(--text);
+  backdrop-filter:blur(8px);
+}
+.btn-ghost:hover{background:var(--glass-strong); border-color:var(--teal); transform:translateY(-2px);}
+.btn-sm{padding:10px 18px;font-size:13px;border-radius:7px;}
+.ripple{position:absolute;border-radius:50%;background:rgba(255,255,255,.35);transform:scale(0);animation:rippleAnim .6s ease-out;pointer-events:none;}
+@keyframes rippleAnim{to{transform:scale(3);opacity:0;}}
+
+/* ============ HEADER ============ */
+header{
+  position:fixed;top:0;left:0;right:0;z-index:900;
+  padding:20px 0;
+  transition:padding .35s var(--ease), background .35s var(--ease), border-color .35s var(--ease);
+  border-bottom:1px solid transparent;
+}
+header.scrolled{
+  padding:12px 0;
+  background:rgba(8,11,17,0.78);
+  backdrop-filter:blur(16px) saturate(140%);
+  border-bottom:1px solid var(--line);
+}
+.nav-row{display:flex;align-items:center;justify-content:space-between;gap:24px;}
+.brand{display:flex;align-items:center;gap:12px;flex-shrink:0;}
+.brand-mark{
+  width:38px;height:38px;border-radius:9px;
+  background:linear-gradient(155deg, var(--teal), #0e8a6d);
+  display:flex;align-items:center;justify-content:center;
+  font-family:var(--serif); font-size:17px; color:#06120e; font-weight:700;
+  position:relative;
+  box-shadow:0 0 0 1px rgba(42,217,174,.3), 0 8px 20px -8px rgba(42,217,174,.6);
+}
+.brand-text{display:flex;flex-direction:column;line-height:1.15;}
+.brand-text b{font-family:var(--serif);font-size:16.5px;letter-spacing:.01em;}
+.brand-text span{font-family:var(--mono);font-size:10px;letter-spacing:.1em;color:var(--text-dim);text-transform:uppercase;}
+.nav-center{display:flex;gap:2px;}
+.nav-center a{
+  padding:10px 14px;font-size:14px;color:var(--text-dim);border-radius:6px;
+  transition:color .25s, background .25s;
+}
+.nav-center a:hover{color:var(--text); background:var(--glass);}
+.nav-right{display:flex;align-items:center;gap:10px;flex-shrink:0;}
+.icon-btn{
+  width:38px;height:38px;border-radius:8px;display:flex;align-items:center;justify-content:center;
+  color:var(--text-dim); font-size:16px; transition:background .25s, color .25s;
+}
+.icon-btn:hover{background:var(--glass);color:var(--text);}
+.burger{display:none;flex-direction:column;gap:5px;width:38px;height:38px;align-items:center;justify-content:center;}
+.burger span{width:20px;height:1.5px;background:var(--text);transition:all .3s var(--ease);}
+.burger.open span:nth-child(1){transform:translateY(6.5px) rotate(45deg);}
+.burger.open span:nth-child(2){opacity:0;}
+.burger.open span:nth-child(3){transform:translateY(-6.5px) rotate(-45deg);}
+
+.mobile-nav{
+  position:fixed;top:0;right:-100%;width:min(340px,86vw);height:100vh;
+  background:rgba(10,14,20,.98);backdrop-filter:blur(20px);
+  border-left:1px solid var(--line);
+  z-index:1000;transition:right .4s var(--ease);
+  padding:100px 32px 32px;display:flex;flex-direction:column;gap:6px;
+  overflow-y:auto;
+}
+.mobile-nav.open{right:0;}
+.mobile-nav a{padding:14px 4px;font-size:16px;border-bottom:1px solid var(--line);color:var(--text-dim);}
+.mobile-nav a:hover{color:var(--teal);}
+.nav-overlay{position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:999;opacity:0;pointer-events:none;transition:opacity .3s;}
+.nav-overlay.open{opacity:1;pointer-events:auto;}
+
+/* Search popup */
+.search-popup{
+  position:fixed;inset:0;background:rgba(6,9,14,.9);backdrop-filter:blur(10px);
+  z-index:1100;display:flex;align-items:flex-start;justify-content:center;
+  padding-top:14vh;opacity:0;pointer-events:none;transition:opacity .3s;
+}
+.search-popup.open{opacity:1;pointer-events:auto;}
+.search-box{width:min(600px,88vw);}
+.search-box input{
+  width:100%;background:var(--panel-2);border:1px solid var(--line-strong);
+  padding:20px 22px;border-radius:12px;color:var(--text);font-size:18px;font-family:var(--serif);
+}
+.search-box input::placeholder{color:var(--text-faint);}
+.search-hint{margin-top:14px;color:var(--text-faint);font-size:13px;font-family:var(--mono);text-align:center;}
+
+/* ============ HERO ============ */
+.hero{
+  position:relative;
+  min-height:100vh;
+  display:flex;align-items:center;
+  padding:150px 0 90px;
+  background:
+    radial-gradient(ellipse 800px 500px at 15% 0%, rgba(42,217,174,.10), transparent 60%),
+    radial-gradient(ellipse 700px 500px at 100% 30%, rgba(210,168,87,.07), transparent 60%),
+    var(--ink);
+  overflow:hidden;
+}
+#labCanvas{position:absolute;inset:0;width:100%;height:100%;opacity:.55;}
+.hero-inner{position:relative;z-index:2;display:grid;grid-template-columns:1.15fr .85fr;gap:60px;align-items:center;width:100%;}
+.hero-copy h1{
+  font-size:clamp(38px,5.2vw,68px);
+  line-height:1.06; letter-spacing:-0.02em; color:var(--text);
+}
+.hero-copy h1 em{font-style:normal;color:var(--teal);}
+.hero-sub{
+  font-family:var(--mono); text-transform:uppercase; letter-spacing:.12em; font-size:13px;
+  color:var(--brass); margin-top:22px;
+}
+.hero-copy p{color:var(--text-dim);font-size:17.5px;max-width:520px;margin-top:20px;}
+.hero-actions{display:flex;gap:14px;margin-top:38px;flex-wrap:wrap;}
+
+.hero-panel{
+  position:relative;
+  border-radius:20px;
+  background:var(--glass);
+  border:1px solid var(--line-strong);
+  backdrop-filter:blur(18px);
+  padding:26px;
+  animation:floatY 7s ease-in-out infinite;
+}
+@keyframes floatY{0%,100%{transform:translateY(0);}50%{transform:translateY(-14px);}}
+.hero-panel-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:18px;}
+.hero-panel-head span{font-family:var(--mono);font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--text-faint);}
+.hero-dot{width:8px;height:8px;border-radius:50%;background:var(--teal);box-shadow:0 0 0 4px var(--teal-dim);}
+.hero-row{display:flex;justify-content:space-between;align-items:center;padding:13px 0;border-bottom:1px solid var(--line);}
+.hero-row:last-child{border-bottom:none;}
+.hero-row b{font-weight:600;font-size:14.5px;}
+.hero-row small{display:block;color:var(--text-faint);font-size:11.5px;font-family:var(--mono);margin-top:2px;}
+.hero-tag{font-family:var(--mono);font-size:11px;padding:4px 9px;border-radius:5px;background:var(--teal-dim);color:var(--teal);}
+.hero-tag.brass{background:var(--brass-dim);color:var(--brass);}
+.hero-float-card{
+  position:absolute; background:var(--glass-strong); border:1px solid var(--line-strong);
+  border-radius:12px; padding:12px 16px; backdrop-filter:blur(12px);
+  font-family:var(--mono); font-size:11.5px; color:var(--text-dim);
+  animation:floatY 8s ease-in-out infinite;
+}
+.hero-float-card.a{top:-30px;right:-20px;animation-delay:.5s;}
+.hero-float-card.b{bottom:-24px;left:-30px;animation-delay:1.2s;}
+.hero-float-card b{color:var(--teal);display:block;font-family:var(--sans);font-size:17px;}
+
+/* Reveal animation utility */
+.reveal{opacity:0;transform:translateY(28px);transition:opacity .8s var(--ease), transform .8s var(--ease);}
+.reveal.in{opacity:1;transform:translateY(0);}
+.reveal-stagger > *{transition-delay:calc(var(--i,0) * 90ms);}
+
+/* ============ STATS ============ */
+.stats-band{
+  padding:64px 0; border-top:1px solid var(--line); border-bottom:1px solid var(--line);
+  background:var(--panel);
+}
+.stats-grid{display:grid;grid-template-columns:repeat(6,1fr);gap:20px;}
+.stat-item{text-align:center;border-right:1px solid var(--line);}
+.stat-item:last-child{border-right:none;}
+.stat-num{
+  font-family:var(--serif); font-size:clamp(28px,3vw,40px); color:var(--teal); letter-spacing:-0.01em;
+}
+.stat-label{margin-top:8px;font-family:var(--mono);font-size:11.5px;letter-spacing:.08em;text-transform:uppercase;color:var(--text-dim);}
+
+/* ============ CARD GRID GENERIC ============ */
+.grid{display:grid;gap:22px;}
+.grid-4{grid-template-columns:repeat(4,1fr);}
+.grid-3{grid-template-columns:repeat(3,1fr);}
+.grid-2{grid-template-columns:repeat(2,1fr);}
+
+.spec-card{
+  position:relative;
+  background:var(--glass);
+  border:1px solid var(--line);
+  border-radius:14px;
+  padding:30px 26px;
+  transition:transform .4s var(--ease), border-color .4s var(--ease), background .4s var(--ease);
+}
+.spec-card:hover{transform:translateY(-6px);border-color:var(--teal);background:var(--glass-strong);}
+.spec-card::before, .spec-card::after{
+  content:''; position:absolute; width:14px;height:14px; border:1px solid var(--line-strong); opacity:0; transition:opacity .4s;
+}
+.spec-card::before{top:8px;left:8px;border-right:none;border-bottom:none;}
+.spec-card::after{bottom:8px;right:8px;border-left:none;border-top:none;}
+.spec-card:hover::before, .spec-card:hover::after{opacity:1;border-color:var(--teal);}
+
+.card-icon{
+  width:48px;height:48px;border-radius:10px;
+  background:var(--teal-dim); color:var(--teal);
+  display:flex;align-items:center;justify-content:center;font-size:21px;
+  margin-bottom:20px;
+}
+.spec-card h3{font-size:19px;color:var(--text);margin-bottom:10px;}
+.spec-card p{color:var(--text-dim);font-size:14.5px;line-height:1.65;}
+.card-link{
+  margin-top:18px;display:inline-flex;align-items:center;gap:6px;
+  font-family:var(--mono);font-size:12px;letter-spacing:.05em;text-transform:uppercase;color:var(--teal);
+}
+.card-link .arrow{transition:transform .3s var(--ease);}
+.spec-card:hover .card-link .arrow{transform:translateX(4px);}
+
+/* Lab cards w/ image placeholder */
+.lab-card{
+  background:var(--panel-2); border:1px solid var(--line); border-radius:16px; overflow:hidden;
+  transition:transform .4s var(--ease), border-color .4s var(--ease);
+  position:relative;
+}
+.lab-card:hover{transform:translateY(-6px);border-color:var(--line-strong);}
+.lab-thumb{
+  height:150px; position:relative; overflow:hidden;
+  background:
+    repeating-linear-gradient(115deg, rgba(42,217,174,.10) 0 2px, transparent 2px 26px),
+    linear-gradient(150deg, #101a22, #0b1017);
+  display:flex;align-items:center;justify-content:center;
+}
+.lab-thumb .glyph{font-size:38px;color:var(--teal);opacity:.85;filter:drop-shadow(0 0 18px rgba(42,217,174,.4));}
+.lab-thumb .tag{
+  position:absolute; top:12px; left:12px; font-family:var(--mono); font-size:10px; letter-spacing:.08em;
+  text-transform:uppercase; padding:4px 9px; border-radius:5px; background:rgba(8,11,17,.6);
+  border:1px solid var(--line-strong); color:var(--brass);
+}
+.lab-body{padding:22px 22px 24px;}
+.lab-body h3{font-size:17.5px;color:var(--text);margin-bottom:8px;}
+.lab-body p{font-size:14px;color:var(--text-dim);margin-bottom:16px;}
+
+/* Simulation cards */
+.sim-card{
+  background:var(--glass); border:1px solid var(--line); border-radius:14px; padding:24px;
+  display:flex;flex-direction:column;gap:14px;
+  transition:transform .4s var(--ease), border-color .4s var(--ease);
+}
+.sim-card:hover{transform:translateY(-6px);border-color:var(--teal);}
+.sim-top{display:flex;justify-content:space-between;align-items:flex-start;}
+.sim-top h3{font-size:18px;}
+.diff{font-family:var(--mono);font-size:10px;letter-spacing:.06em;text-transform:uppercase;padding:4px 8px;border-radius:5px;}
+.diff.easy{background:var(--teal-dim);color:var(--teal);}
+.diff.med{background:var(--brass-dim);color:var(--brass);}
+.diff.hard{background:rgba(230,90,90,.14);color:#e66d6d;}
+.sim-meta{display:flex;gap:16px;font-family:var(--mono);font-size:12px;color:var(--text-faint);}
+.sim-skills{display:flex;gap:6px;flex-wrap:wrap;}
+.skill-chip{font-size:11.5px;padding:5px 10px;border-radius:20px;border:1px solid var(--line-strong);color:var(--text-dim);}
+.sim-launch{margin-top:6px;}
+
+/* Timeline */
+.timeline{display:flex;align-items:flex-start;justify-content:space-between;position:relative;padding-top:10px;}
+.timeline::before{
+  content:''; position:absolute; top:33px; left:5%; right:5%; height:1px;
+  background:repeating-linear-gradient(90deg, var(--line-strong) 0 8px, transparent 8px 16px);
+}
+.t-step{position:relative;flex:1;text-align:center;padding:0 8px;}
+.t-node{
+  width:64px;height:64px;border-radius:50%; margin:0 auto 18px;
+  background:var(--panel-2); border:1px solid var(--line-strong);
+  display:flex;align-items:center;justify-content:center; font-family:var(--mono); font-size:13px; color:var(--teal);
+  position:relative; z-index:2; transition:border-color .3s, box-shadow .3s;
+}
+.t-step:hover .t-node{border-color:var(--teal); box-shadow:0 0 0 6px var(--teal-dim);}
+.t-step h4{font-size:14.5px;color:var(--text);margin-bottom:6px;}
+.t-step p{font-size:12.5px;color:var(--text-faint);}
+
+/* AI Mentor */
+.aura-section{
+  border-radius:24px; border:1px solid var(--line-strong);
+  background:radial-gradient(ellipse 600px 400px at 85% 20%, rgba(210,168,87,.09), transparent 60%), var(--panel);
+  padding:64px; display:grid; grid-template-columns:1fr 1fr; gap:50px; align-items:center;
+  position:relative; overflow:hidden;
+}
+.aura-orb{
+  width:220px;height:220px;border-radius:50%;margin:0 auto;
+  background:radial-gradient(circle at 35% 30%, rgba(42,217,174,.55), rgba(42,217,174,.05) 70%);
+  border:1px solid var(--line-strong);
+  position:relative;
+  animation:orbPulse 4s ease-in-out infinite;
+}
+@keyframes orbPulse{0%,100%{box-shadow:0 0 0 0 rgba(42,217,174,.25);}50%{box-shadow:0 0 0 26px rgba(42,217,174,0);}}
+.aura-orb::after{
+  content:'AURA'; position:absolute; inset:0; display:flex; align-items:center; justify-content:center;
+  font-family:var(--mono); letter-spacing:.14em; font-size:13px; color:#eafff8;
+}
+.aura-list{margin-top:26px;display:flex;flex-direction:column;gap:14px;}
+.aura-list li{display:flex;gap:12px;align-items:flex-start;font-size:14.5px;color:var(--text-dim);}
+.aura-list li span.mark{color:var(--teal);font-family:var(--mono);flex-shrink:0;}
+
+/* Research stats */
+.research-grid{display:grid;grid-template-columns:1.1fr .9fr;gap:50px;align-items:center;}
+.research-stats{display:grid;grid-template-columns:1fr 1fr;gap:18px;}
+.rstat{background:var(--glass);border:1px solid var(--line);border-radius:14px;padding:24px;}
+.rstat .n{font-family:var(--serif);font-size:32px;color:var(--brass);}
+.rstat .l{font-family:var(--mono);font-size:11.5px;text-transform:uppercase;letter-spacing:.06em;color:var(--text-dim);margin-top:6px;}
+
+/* News */
+.news-card{background:var(--panel-2);border:1px solid var(--line);border-radius:14px;overflow:hidden;transition:transform .35s var(--ease);}
+.news-card:hover{transform:translateY(-5px);}
+.news-thumb{height:130px;background:linear-gradient(135deg,#0e1620,#0a0f16);position:relative;}
+.news-thumb::after{content:'';position:absolute;inset:0;background:repeating-linear-gradient(45deg, rgba(42,217,174,.05) 0 2px, transparent 2px 18px);}
+.news-cat{position:absolute;bottom:10px;left:14px;font-family:var(--mono);font-size:10px;text-transform:uppercase;letter-spacing:.08em;color:var(--teal);}
+.news-body{padding:20px;}
+.news-date{font-family:var(--mono);font-size:11px;color:var(--text-faint);}
+.news-body h4{font-size:16px;margin:10px 0;color:var(--text);font-family:var(--sans);font-weight:600;}
+.news-body p{font-size:13.5px;color:var(--text-dim);}
+
+/* Partners */
+.partners-row{
+  display:grid; grid-template-columns:repeat(5,1fr); gap:18px;
+}
+.partner-tile{
+  border:1px solid var(--line); border-radius:12px; padding:26px 10px; text-align:center;
+  color:var(--text-faint); font-family:var(--serif); font-size:16px; letter-spacing:.02em;
+  transition:border-color .3s, color .3s;
+}
+.partner-tile:hover{border-color:var(--line-strong);color:var(--text-dim);}
+
+/* Testimonials */
+.testi-wrap{position:relative;max-width:760px;margin:0 auto;text-align:center;}
+.testi-slide{display:none;animation:fadeIn .6s ease;}
+.testi-slide.active{display:block;}
+@keyframes fadeIn{from{opacity:0;transform:translateY(10px);}to{opacity:1;transform:translateY(0);}}
+.testi-quote{font-family:var(--serif);font-size:clamp(20px,2.4vw,28px);line-height:1.5;color:var(--text);}
+.testi-quote::before{content:'“';color:var(--teal);}
+.testi-quote::after{content:'”';color:var(--teal);}
+.testi-person{margin-top:26px;font-family:var(--mono);font-size:12.5px;color:var(--text-dim);letter-spacing:.03em;}
+.testi-dots{display:flex;justify-content:center;gap:8px;margin-top:34px;}
+.testi-dot{width:8px;height:8px;border-radius:50%;background:var(--line-strong);transition:background .3s,transform .3s;}
+.testi-dot.active{background:var(--teal);transform:scale(1.3);}
+
+/* CTA */
+.cta-band{
+  border-radius:24px; border:1px solid var(--line-strong);
+  background:
+    radial-gradient(ellipse 700px 400px at 20% 0%, rgba(42,217,174,.16), transparent 60%),
+    radial-gradient(ellipse 500px 300px at 90% 100%, rgba(210,168,87,.12), transparent 60%),
+    var(--panel);
+  padding:80px 60px; text-align:center;
+}
+.cta-band h2{font-size:clamp(28px,3.8vw,46px);}
+.cta-band p{color:var(--text-dim);margin:18px 0 34px;font-size:16.5px;}
+.cta-actions{display:flex;gap:16px;justify-content:center;flex-wrap:wrap;}
+
+/* Footer */
+footer{background:var(--ink-2);border-top:1px solid var(--line);padding:80px 0 30px;}
+.foot-grid{display:grid;grid-template-columns:1.5fr repeat(4,1fr);gap:40px;margin-bottom:60px;}
+.foot-brand p{color:var(--text-faint);font-size:13.5px;margin-top:16px;max-width:280px;}
+.foot-col h5{font-family:var(--mono);font-size:11.5px;text-transform:uppercase;letter-spacing:.08em;color:var(--text);margin-bottom:18px;}
+.foot-col a{display:block;color:var(--text-faint);font-size:14px;margin-bottom:11px;transition:color .25s;}
+.foot-col a:hover{color:var(--teal);}
+.foot-social{display:flex;gap:10px;margin-top:20px;}
+.foot-social a{width:36px;height:36px;border:1px solid var(--line-strong);border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:14px;color:var(--text-dim);transition:all .25s;}
+.foot-social a:hover{border-color:var(--teal);color:var(--teal);}
+.foot-bottom{
+  border-top:1px solid var(--line); padding-top:26px;
+  display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px;
+  font-size:13px;color:var(--text-faint); font-family:var(--mono);
+}
+
+/* Back to top */
+.to-top{
+  position:fixed;bottom:28px;right:28px;width:46px;height:46px;border-radius:50%;
+  background:var(--teal); color:#06120e; display:flex;align-items:center;justify-content:center;
+  font-size:16px; opacity:0;pointer-events:none;transform:translateY(10px);
+  transition:opacity .35s,transform .35s; z-index:500;
+  box-shadow:0 10px 26px -8px rgba(42,217,174,.6);
+}
+.to-top.show{opacity:1;pointer-events:auto;transform:translateY(0);}
+
+/* Responsive */
+@media (max-width:1080px){
+  .stats-grid{grid-template-columns:repeat(3,1fr);}
+  .stat-item:nth-child(3){border-right:none;}
+  .grid-4{grid-template-columns:repeat(2,1fr);}
+  .research-grid, .aura-section{grid-template-columns:1fr;}
+  .partners-row{grid-template-columns:repeat(3,1fr);}
+}
+@media (max-width:860px){
+  .nav-center{display:none;}
+  .burger{display:flex;}
+  .hero-inner{grid-template-columns:1fr;}
+  .hero-panel{order:-1;max-width:420px;margin:0 auto;}
+  .grid-3{grid-template-columns:repeat(2,1fr);}
+  .foot-grid{grid-template-columns:1fr 1fr;}
+  .timeline{flex-wrap:wrap;gap:30px;}
+  .timeline::before{display:none;}
+  .t-step{flex:0 0 45%;}
+}
+@media (max-width:600px){
+  .wrap{padding:0 20px;}
+  .section{padding:80px 0;}
+  .stats-grid{grid-template-columns:repeat(2,1fr);}
+  .stat-item:nth-child(2n){border-right:none;}
+  .grid-4,.grid-3,.grid-2{grid-template-columns:1fr;}
+  .partners-row{grid-template-columns:repeat(2,1fr);}
+  .aura-section{padding:36px 24px;}
+  .cta-band{padding:56px 26px;}
+  .foot-grid{grid-template-columns:1fr;gap:34px;}
+  .foot-bottom{flex-direction:column;text-align:center;}
+}
+</style>
+</head>
+<body>
+
+<!-- ============ HEADER ============ -->
+<header id="siteHeader">
+  <div class="wrap nav-row">
+    <div class="brand">
+      <div class="brand-mark">G</div>
+      <div class="brand-text">
+        <b>Global Business Laboratory Network</b>
+        <span>GBLN &middot; Est. Research Consortium</span>
+      </div>
+    </div>
+    <nav class="nav-center">
+      <a href="#home">Home</a>
+      <a href="#about">About</a>
+      <a href="#schools">Schools</a>
+      <a href="#labs">Laboratories</a>
+      <a href="#simulations">Simulations</a>
+      <a href="#research">Research</a>
+      <a href="#news">News</a>
+      <a href="#contact">Contact</a>
+    </nav>
+    <div class="nav-right">
+      <button class="icon-btn" id="searchOpen" aria-label="Search">&#9906;</button>
+      <a href="#" class="btn btn-ghost btn-sm">Login</a>
+      <a href="#" class="btn btn-primary btn-sm">Launch Platform</a>
+      <button class="burger" id="burgerBtn" aria-label="Menu"><span></span><span></span><span></span></button>
+    </div>
+  </div>
+</header>
+
+<div class="nav-overlay" id="navOverlay"></div>
+<nav class="mobile-nav" id="mobileNav">
+  <a href="#home">Home</a>
+  <a href="#about">About</a>
+  <a href="#schools">Schools</a>
+  <a href="#labs">Laboratories</a>
+  <a href="#simulations">Simulations</a>
+  <a href="#research">Research</a>
+  <a href="#publications">Publications</a>
+  <a href="#industry">Industry</a>
+  <a href="#faculty">Faculty</a>
+  <a href="#news">News</a>
+  <a href="#contact">Contact</a>
+</nav>
+
+<div class="search-popup" id="searchPopup">
+  <div class="search-box">
+    <input type="text" placeholder="Search schools, laboratories, simulations…" id="searchInput" autocomplete="off">
+    <p class="search-hint">Press ESC to close</p>
+  </div>
+</div>
+
+<!-- ============ HERO ============ -->
+<section class="hero" id="home">
+  <canvas id="labCanvas"></canvas>
+  <div class="wrap hero-inner">
+    <div class="hero-copy reveal in">
+      <div class="eyebrow">Global Business Laboratory Network</div>
+      <h1>The World's First<br><em>AI&#8209;Powered</em> Business<br>Laboratory Network</h1>
+      <div class="hero-sub">Experience Business Before Entering Business</div>
+      <p>GBLN is an innovative ecosystem where students learn through laboratories, simulations, AI mentors, real-world decision making and immersive business experiences.</p>
+      <div class="hero-actions">
+        <a href="#schools" class="btn btn-primary">Explore Schools</a>
+        <a href="#simulations" class="btn btn-ghost">Browse Simulations</a>
+      </div>
+    </div>
+    <div class="hero-panel">
+      <div class="hero-float-card a"><b>4,218</b>Live Simulations Running</div>
+      <div class="hero-panel-head">
+        <span>Laboratory Console</span>
+        <span class="hero-dot"></span>
+      </div>
+      <div class="hero-row">
+        <div><b>Startup Incubation Lab</b><small>Cohort 14 &middot; Active</small></div>
+        <span class="hero-tag">Live</span>
+      </div>
+      <div class="hero-row">
+        <div><b>Financial Modeling Lab</b><small>Valuation Sprint</small></div>
+        <span class="hero-tag brass">New</span>
+      </div>
+      <div class="hero-row">
+        <div><b>IPO Simulation</b><small>Underwriting Round</small></div>
+        <span class="hero-tag">Live</span>
+      </div>
+      <div class="hero-row">
+        <div><b>AURA — AI Mentor</b><small>Reviewing 212 submissions</small></div>
+        <span class="hero-tag brass">Online</span>
+      </div>
+      <div class="hero-float-card b"><b>AURA</b>AI Mentor Online</div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ STATS ============ -->
+<div class="stats-band">
+  <div class="wrap stats-grid">
+    <div class="stat-item"><div class="stat-num" data-count="20">0</div><div class="stat-label">Schools</div></div>
+    <div class="stat-item"><div class="stat-num" data-count="200">0</div><div class="stat-label">Laboratories</div></div>
+    <div class="stat-item"><div class="stat-num" data-count="4000">0</div><div class="stat-label">Simulations</div></div>
+    <div class="stat-item"><div class="stat-num" data-count="100">0</div><div class="stat-label">Certifications</div></div>
+    <div class="stat-item"><div class="stat-num" data-count="50">0</div><div class="stat-label">Research Projects</div></div>
+    <div class="stat-item"><div class="stat-num" data-count="100000">0</div><div class="stat-label">Future Learners</div></div>
+  </div>
+</div>
+
+<!-- ============ ABOUT / WHY GBLN ============ -->
+<section class="section" id="about">
+  <div class="wrap">
+    <div class="section-head reveal">
+      <div class="eyebrow">Why GBLN</div>
+      <h2>A laboratory, not a lecture hall.</h2>
+      <p>Every discipline here is tested against a live simulation before it is taught as theory. This is the operating premise of the network.</p>
+    </div>
+    <div class="grid grid-3 reveal-stagger">
+      <div class="spec-card reveal" style="--i:0"><div class="card-icon">&#9878;</div><h3>Learning by Doing</h3><p>Every module resolves into a laboratory task — a decision, a model, a negotiation — graded on outcome, not recall.</p></div>
+      <div class="spec-card reveal" style="--i:1"><div class="card-icon">&#10022;</div><h3>AI Mentor</h3><p>AURA observes every submission and simulation run, offering feedback calibrated to your specific decisions.</p></div>
+      <div class="spec-card reveal" style="--i:2"><div class="card-icon">&#9673;</div><h3>Industry Ready</h3><p>Curricula are co-authored with operating partners across finance, technology, and consulting practice.</p></div>
+      <div class="spec-card reveal" style="--i:3"><div class="card-icon">&#9645;</div><h3>Business Simulations</h3><p>Over four thousand scenario-driven simulations, from startup pitches to full corporate turnarounds.</p></div>
+      <div class="spec-card reveal" style="--i:4"><div class="card-icon">&#127891;</div><h3>Professional Certifications</h3><p>Credentials issued on demonstrated laboratory performance, recognized across our industry consortium.</p></div>
+      <div class="spec-card reveal" style="--i:5"><div class="card-icon">&#128269;</div><h3>Global Research</h3><p>A standing research faculty publishing case studies, working papers, and cross-border collaborations.</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ FEATURED SCHOOLS ============ -->
+<section class="section section-alt" id="schools">
+  <div class="wrap">
+    <div class="section-head reveal">
+      <div class="eyebrow">Featured Schools</div>
+      <h2>Eight disciplines. One laboratory method.</h2>
+      <p>Each school runs its own set of laboratories, faculty, and simulation libraries under a shared instructional model.</p>
+    </div>
+    <div class="grid grid-4 reveal-stagger" id="schoolsGrid"></div>
+  </div>
+</section>
+
+<!-- ============ FEATURED LABORATORIES ============ -->
+<section class="section" id="labs">
+  <div class="wrap">
+    <div class="section-head reveal">
+      <div class="eyebrow">Featured Laboratories</div>
+      <h2>Where coursework becomes casework.</h2>
+      <p>Laboratories are standing environments — not one-off exercises — where cohorts return across a term to build a portfolio.</p>
+    </div>
+    <div class="grid grid-4 reveal-stagger" id="labsGrid"></div>
+  </div>
+</section>
+
+<!-- ============ POPULAR SIMULATIONS ============ -->
+<section class="section section-alt" id="simulations">
+  <div class="wrap">
+    <div class="section-head reveal">
+      <div class="eyebrow">Popular Simulations</div>
+      <h2>Run the scenario. Live with the outcome.</h2>
+      <p>Every simulation carries a difficulty rating, a duration, and a mapped skill set assessed by AURA and faculty reviewers.</p>
+    </div>
+    <div class="grid grid-3 reveal-stagger" id="simGrid"></div>
+  </div>
+</section>
+
+<!-- ============ HOW GBLN WORKS ============ -->
+<section class="section" id="how">
+  <div class="wrap">
+    <div class="section-head reveal">
+      <div class="eyebrow">How GBLN Works</div>
+      <h2>Seven steps from enrollment to portfolio.</h2>
+    </div>
+    <div class="timeline reveal-stagger">
+      <div class="t-step reveal" style="--i:0"><div class="t-node">1</div><h4>Choose School</h4><p>Select your discipline</p></div>
+      <div class="t-step reveal" style="--i:1"><div class="t-node">2</div><h4>Choose Laboratory</h4><p>Pick a live environment</p></div>
+      <div class="t-step reveal" style="--i:2"><div class="t-node">3</div><h4>Launch Simulation</h4><p>Enter the scenario</p></div>
+      <div class="t-step reveal" style="--i:3"><div class="t-node">4</div><h4>Complete Challenges</h4><p>Make graded decisions</p></div>
+      <div class="t-step reveal" style="--i:4"><div class="t-node">5</div><h4>Assessment</h4><p>Reviewed by AURA + faculty</p></div>
+      <div class="t-step reveal" style="--i:5"><div class="t-node">6</div><h4>Earn Certificate</h4><p>Credential issued</p></div>
+      <div class="t-step reveal" style="--i:6"><div class="t-node">7</div><h4>Build Portfolio</h4><p>Carried across labs</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ AI MENTOR ============ -->
+<section class="section section-alt">
+  <div class="wrap">
+    <div class="aura-section reveal">
+      <div>
+        <div class="aura-orb"></div>
+      </div>
+      <div>
+        <div class="eyebrow">AI Mentor</div>
+        <h2 style="font-size:clamp(26px,3vw,36px);">Meet AURA, your laboratory mentor.</h2>
+        <p style="color:var(--text-dim);margin-top:14px;">AURA observes every decision you make inside a simulation and responds the way a resident faculty advisor would — specific, contextual, and available at any hour.</p>
+        <ul class="aura-list">
+          <li><span class="mark">01</span>24×7 guidance across every laboratory and simulation</li>
+          <li><span class="mark">02</span>Personalized feedback tied to your actual decisions</li>
+          <li><span class="mark">03</span>Career recommendations based on lab performance</li>
+          <li><span class="mark">04</span>A dedicated simulation coach during live runs</li>
+          <li><span class="mark">05</span>A research assistant for working papers and case studies</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ RESEARCH ============ -->
+<section class="section" id="research">
+  <div class="wrap">
+    <div class="research-grid">
+      <div class="reveal">
+        <div class="eyebrow">Research</div>
+        <h2 style="font-size:clamp(26px,3vw,38px);">A standing research faculty, not a marketing claim.</h2>
+        <p style="color:var(--text-dim);margin-top:16px;max-width:520px;">GBLN's research arm operates independently of the teaching laboratories, producing case material that eventually feeds back into the curriculum.</p>
+        <a href="#publications" class="btn btn-ghost" style="margin-top:28px;">View Publications</a>
+      </div>
+      <div class="research-stats reveal">
+        <div class="rstat"><div class="n">1,240+</div><div class="l">Publications</div></div>
+        <div class="rstat"><div class="n">860+</div><div class="l">Case Studies</div></div>
+        <div class="rstat"><div class="n">75+</div><div class="l">Books</div></div>
+        <div class="rstat"><div class="n">32</div><div class="l">Patents</div></div>
+        <div class="rstat"><div class="n">410+</div><div class="l">Working Papers</div></div>
+        <div class="rstat"><div class="n">40+</div><div class="l">Int'l Collaborations</div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ NEWS ============ -->
+<section class="section section-alt" id="news">
+  <div class="wrap">
+    <div class="section-head reveal">
+      <div class="eyebrow">Latest News</div>
+      <h2>Notes from across the network.</h2>
+    </div>
+    <div class="grid grid-3 reveal-stagger" id="newsGrid"></div>
+  </div>
+</section>
+
+<!-- ============ INDUSTRY PARTNERS ============ -->
+<section class="section" id="industry">
+  <div class="wrap">
+    <div class="section-head reveal">
+      <div class="eyebrow">Industry Partners</div>
+      <h2>Curricula built alongside operating companies.</h2>
+    </div>
+    <div class="partners-row reveal-stagger" id="partnersGrid"></div>
+  </div>
+</section>
+
+<!-- ============ TESTIMONIALS ============ -->
+<section class="section section-alt">
+  <div class="wrap">
+    <div class="section-head reveal" style="margin-left:auto;margin-right:auto;text-align:center;">
+      <div class="eyebrow" style="justify-content:center;">Testimonials</div>
+      <h2>From learners inside the laboratories.</h2>
+    </div>
+    <div class="testi-wrap reveal" id="testiWrap"></div>
+  </div>
+</section>
+
+<!-- ============ CTA ============ -->
+<section class="section" id="contact">
+  <div class="wrap">
+    <div class="cta-band reveal">
+      <div class="eyebrow" style="justify-content:center;">Get Started</div>
+      <h2>Start Your Learning Journey Today</h2>
+      <p>Choose a school, enter a laboratory, and launch your first simulation this week.</p>
+      <div class="cta-actions">
+        <a href="#schools" class="btn btn-primary">Explore Schools</a>
+        <a href="#" class="btn btn-ghost">Launch Platform</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ FOOTER ============ -->
+<footer>
+  <div class="wrap">
+    <div class="foot-grid">
+      <div class="foot-brand">
+        <div class="brand">
+          <div class="brand-mark">G</div>
+          <div class="brand-text"><b>GBLN</b><span>Global Business Laboratory Network</span></div>
+        </div>
+        <p>Learning Business by Doing Business. An AI-powered laboratory network for the next generation of operators.</p>
+        <div class="foot-social">
+          <a href="#" aria-label="LinkedIn">in</a>
+          <a href="#" aria-label="X">&#120143;</a>
+          <a href="#" aria-label="YouTube">&#9654;</a>
+          <a href="#" aria-label="Instagram">&#9678;</a>
+        </div>
+      </div>
+      <div class="foot-col">
+        <h5>About</h5>
+        <a href="#about">Our Mission</a>
+        <a href="#faculty">Faculty</a>
+        <a href="#">Governance</a>
+        <a href="#">Careers</a>
+      </div>
+      <div class="foot-col">
+        <h5>Schools</h5>
+        <a href="#schools">AI for Business</a>
+        <a href="#schools">Entrepreneurship</a>
+        <a href="#schools">Finance</a>
+        <a href="#schools">Analytics</a>
+      </div>
+      <div class="foot-col">
+        <h5>Laboratories</h5>
+        <a href="#labs">Startup Incubation</a>
+        <a href="#labs">Financial Modeling</a>
+        <a href="#labs">Portfolio Management</a>
+        <a href="#simulations">Simulations</a>
+      </div>
+      <div class="foot-col">
+        <h5>Contact</h5>
+        <a href="#">admissions@gbln.edu</a>
+        <a href="#">press@gbln.edu</a>
+        <a href="#">Partnerships</a>
+        <a href="#research">Research Office</a>
+      </div>
+    </div>
+    <div class="divider"></div>
+    <div class="foot-bottom">
+      <span>&copy; <span id="year"></span> Global Business Laboratory Network. All rights reserved.</span>
+      <span>Privacy &middot; Terms &middot; Accessibility</span>
+    </div>
+  </div>
+</footer>
+
+<button class="to-top" id="toTop" aria-label="Back to top">&#8593;</button>
+
+<script>
+(function(){
+"use strict";
+
+/* ============================================================
+   DATA — content for dynamically rendered sections
+   ============================================================ */
+var schools = [
+  {icon:'&#9881;', name:'School of AI for Business', desc:'Applying machine intelligence to strategy, operations, and decision-making.'},
+  {icon:'&#128640;', name:'School of Entrepreneurship', desc:'From idea validation to venture funding, taught inside live incubation labs.'},
+  {icon:'&#128176;', name:'School of Finance', desc:'Valuation, capital markets, and portfolio strategy under real market conditions.'},
+  {icon:'&#128203;', name:'School of Accounting', desc:'Financial reporting and forensic analysis grounded in case-based auditing.'},
+  {icon:'&#128225;', name:'School of Marketing', desc:'Brand strategy and growth campaigns tested against simulated markets.'},
+  {icon:'&#129309;', name:'School of HR', desc:'Organizational design and talent strategy for scaling companies.'},
+  {icon:'&#128200;', name:'School of Economics', desc:'Macro and micro theory applied to policy and corporate scenarios.'},
+  {icon:'&#128202;', name:'School of Business Analytics', desc:'Data-driven decision science across every laboratory in the network.'}
+];
+
+var labs = [
+  {tag:'Incubation', glyph:'&#128161;', name:'Startup Incubation Lab', desc:'Build and pitch a venture across a full incubation cycle.'},
+  {tag:'Finance', glyph:'&#128202;', name:'Financial Modeling Lab', desc:'Construct valuation models under live market data feeds.'},
+  {tag:'Investing', glyph:'&#128181;', name:'Portfolio Management Lab', desc:'Manage a simulated fund against real historical volatility.'},
+  {tag:'Forensics', glyph:'&#128269;', name:'Corporate Fraud Investigation Lab', desc:'Trace irregularities through a simulated audit trail.'},
+  {tag:'AI', glyph:'&#10024;', name:'AI Prompt Engineering Lab', desc:'Design and evaluate prompts for enterprise-grade AI systems.'},
+  {tag:'Analytics', glyph:'&#128200;', name:'Business Analytics Lab', desc:'Turn raw operational data into a defensible recommendation.'},
+  {tag:'Marketing', glyph:'&#127919;', name:'Marketing Strategy Lab', desc:'Plan and defend a go-to-market strategy before a review panel.'},
+  {tag:'Leadership', glyph:'&#9878;', name:'Leadership Development Lab', desc:'Practice high-stakes team decisions under time pressure.'}
+];
+
+var sims = [
+  {name:'Startup Pitch', diff:'easy', dur:'45 min', skills:['Storytelling','Financials']},
+  {name:'Business Model Canvas', diff:'easy', dur:'40 min', skills:['Strategy','Structure']},
+  {name:'IPO Simulation', diff:'hard', dur:'3 hrs', skills:['Valuation','Underwriting']},
+  {name:'Corporate Turnaround', diff:'hard', dur:'2.5 hrs', skills:['Ops','Leadership']},
+  {name:'Merger Negotiation', diff:'med', dur:'90 min', skills:['Negotiation','Deal Structuring']},
+  {name:'Fraud Investigation', diff:'med', dur:'2 hrs', skills:['Forensics','Analysis']},
+  {name:'Investment Portfolio', diff:'med', dur:'75 min', skills:['Risk','Allocation']},
+  {name:'Digital Marketing Campaign', diff:'easy', dur:'50 min', skills:['Growth','Analytics']},
+  {name:'Supply Chain Crisis', diff:'hard', dur:'2 hrs', skills:['Logistics','Decision Speed']}
+];
+
+var newsItems = [
+  {cat:'Network', date:'Jun 2026', title:'GBLN opens 40th Laboratory in Nairobi', desc:'The network extends its physical footprint into East Africa.'},
+  {cat:'Research', date:'May 2026', title:'New working paper on AI-mediated negotiation', desc:'Faculty publish findings from 12,000 simulation runs.'},
+  {cat:'Partnership', date:'Apr 2026', title:'Consortium adds three new industry partners', desc:'Curriculum review boards now include operating executives.'}
+];
+
+var partners = ['Microsoft','Google','Deloitte','PwC','EY','KPMG','TCS','Infosys','IBM','Amazon'];
+
+var testimonials = [
+  {quote:'The Financial Modeling Lab taught me more in six weeks than a semester of lecture ever did.', person:'M. Alvarez — School of Finance, Cohort 9'},
+  {quote:'AURA caught a flaw in my valuation model that my own study group missed.', person:'R. Okafor — School of Business Analytics'},
+  {quote:'Running an actual turnaround simulation changed how I think about leadership under pressure.', person:'S. Kapoor — School of Entrepreneurship'}
+];
+
+/* ============================================================
+   RENDER — build dynamic sections from data
+   ============================================================ */
+function el(html){ var d=document.createElement('div'); d.innerHTML=html.trim(); return d.firstChild; }
+
+var schoolsGrid = document.getElementById('schoolsGrid');
+schools.forEach(function(s,i){
+  schoolsGrid.appendChild(el(
+    '<div class="spec-card reveal" style="--i:'+i+'">'+
+      '<div class="card-icon">'+s.icon+'</div>'+
+      '<h3>'+s.name+'</h3><p>'+s.desc+'</p>'+
+      '<a href="#" class="card-link">Explore <span class="arrow">&#8594;</span></a>'+
+    '</div>'
+  ));
+});
+
+var labsGrid = document.getElementById('labsGrid');
+labs.forEach(function(l,i){
+  labsGrid.appendChild(el(
+    '<div class="lab-card reveal" style="--i:'+i+'">'+
+      '<div class="lab-thumb"><span class="tag">'+l.tag+'</span><span class="glyph">'+l.glyph+'</span></div>'+
+      '<div class="lab-body"><h3>'+l.name+'</h3><p>'+l.desc+'</p>'+
+      '<a href="#" class="card-link">Explore <span class="arrow">&#8594;</span></a></div>'+
+    '</div>'
+  ));
+});
+
+var simGrid = document.getElementById('simGrid');
+var diffLabel = {easy:'Beginner', med:'Intermediate', hard:'Advanced'};
+sims.forEach(function(s,i){
+  var chips = s.skills.map(function(k){return '<span class="skill-chip">'+k+'</span>';}).join('');
+  simGrid.appendChild(el(
+    '<div class="sim-card reveal" style="--i:'+i+'">'+
+      '<div class="sim-top"><h3>'+s.name+'</h3><span class="diff '+s.diff+'">'+diffLabel[s.diff]+'</span></div>'+
+      '<div class="sim-meta"><span>&#9201; '+s.dur+'</span></div>'+
+      '<div class="sim-skills">'+chips+'</div>'+
+      '<a href="#" class="btn btn-ghost btn-sm sim-launch">Launch Simulation</a>'+
+    '</div>'
+  ));
+});
+
+var newsGrid = document.getElementById('newsGrid');
+newsItems.forEach(function(n,i){
+  newsGrid.appendChild(el(
+    '<div class="news-card reveal" style="--i:'+i+'">'+
+      '<div class="news-thumb"><span class="news-cat">'+n.cat+'</span></div>'+
+      '<div class="news-body"><span class="news-date">'+n.date+'</span><h4>'+n.title+'</h4><p>'+n.desc+'</p></div>'+
+    '</div>'
+  ));
+});
+
+var partnersGrid = document.getElementById('partnersGrid');
+partners.forEach(function(p,i){
+  partnersGrid.appendChild(el('<div class="partner-tile reveal" style="--i:'+i+'">'+p+'</div>'));
+});
+
+var testiWrap = document.getElementById('testiWrap');
+var slidesHtml = testimonials.map(function(t,i){
+  return '<div class="testi-slide'+(i===0?' active':'')+'"><p class="testi-quote">'+t.quote+'</p><p class="testi-person">'+t.person+'</p></div>';
+}).join('');
+var dotsHtml = testimonials.map(function(_,i){ return '<span class="testi-dot'+(i===0?' active':'')+'" data-i="'+i+'"></span>'; }).join('');
+testiWrap.innerHTML = slidesHtml + '<div class="testi-dots">'+dotsHtml+'</div>';
+
+/* ============================================================
+   HEADER — sticky state + mobile nav + search popup
+   ============================================================ */
+var header = document.getElementById('siteHeader');
+window.addEventListener('scroll', function(){
+  header.classList.toggle('scrolled', window.scrollY > 30);
+  toTop.classList.toggle('show', window.scrollY > 700);
+});
+
+var burger = document.getElementById('burgerBtn');
+var mobileNav = document.getElementById('mobileNav');
+var navOverlay = document.getElementById('navOverlay');
+function closeMobile(){ burger.classList.remove('open'); mobileNav.classList.remove('open'); navOverlay.classList.remove('open'); }
+burger.addEventListener('click', function(){
+  var isOpen = mobileNav.classList.toggle('open');
+  burger.classList.toggle('open', isOpen);
+  navOverlay.classList.toggle('open', isOpen);
+});
+navOverlay.addEventListener('click', closeMobile);
+mobileNav.querySelectorAll('a').forEach(function(a){ a.addEventListener('click', closeMobile); });
+
+var searchOpen = document.getElementById('searchOpen');
+var searchPopup = document.getElementById('searchPopup');
+var searchInput = document.getElementById('searchInput');
+searchOpen.addEventListener('click', function(){
+  searchPopup.classList.add('open');
+  setTimeout(function(){ searchInput.focus(); }, 100);
+});
+searchPopup.addEventListener('click', function(e){ if(e.target === searchPopup) searchPopup.classList.remove('open'); });
+document.addEventListener('keydown', function(e){
+  if(e.key === 'Escape'){ searchPopup.classList.remove('open'); closeMobile(); }
+});
+
+/* ============================================================
+   BACK TO TOP
+   ============================================================ */
+var toTop = document.getElementById('toTop');
+toTop.addEventListener('click', function(){ window.scrollTo({top:0, behavior:'smooth'}); });
+
+/* ============================================================
+   BUTTON RIPPLE EFFECT
+   ============================================================ */
+document.querySelectorAll('.btn').forEach(function(btn){
+  btn.addEventListener('click', function(e){
+    var rect = btn.getBoundingClientRect();
+    var ripple = document.createElement('span');
+    ripple.className = 'ripple';
+    ripple.style.left = (e.clientX - rect.left) + 'px';
+    ripple.style.top = (e.clientY - rect.top) + 'px';
+    btn.appendChild(ripple);
+    setTimeout(function(){ ripple.remove(); }, 650);
+  });
+});
+
+/* ============================================================
+   ANIMATED COUNTERS — trigger on scroll into view
+   ============================================================ */
+var counters = document.querySelectorAll('.stat-num');
+var countersDone = false;
+function animateCounters(){
+  if(countersDone) return;
+  countersDone = true;
+  counters.forEach(function(counter){
+    var target = parseInt(counter.getAttribute('data-count'), 10);
+    var duration = 1800;
+    var start = null;
+    function step(ts){
+      if(!start) start = ts;
+      var progress = Math.min((ts - start) / duration, 1);
+      var eased = 1 - Math.pow(1 - progress, 3);
+      var current = Math.floor(eased * target);
+      counter.textContent = current.toLocaleString() + (progress >= 1 ? '+' : '');
+      if(progress < 1) requestAnimationFrame(step);
+    }
+    requestAnimationFrame(step);
+  });
+}
+
+/* ============================================================
+   SCROLL REVEAL — IntersectionObserver
+   ============================================================ */
+var revealTargets = document.querySelectorAll('.reveal');
+var io = new IntersectionObserver(function(entries){
+  entries.forEach(function(entry){
+    if(entry.isIntersecting){
+      entry.target.classList.add('in');
+      io.unobserve(entry.target);
+    }
+  });
+}, {threshold:0.15});
+revealTargets.forEach(function(t){ io.observe(t); });
+
+var statsBand = document.querySelector('.stats-band');
+var statsIo = new IntersectionObserver(function(entries){
+  entries.forEach(function(entry){ if(entry.isIntersecting) animateCounters(); });
+}, {threshold:0.4});
+if(statsBand) statsIo.observe(statsBand);
+
+/* ============================================================
+   TESTIMONIAL SLIDER — auto-rotate + dot controls
+   ============================================================ */
+var testiSlides, testiDots, testiIndex = 0, testiTimer;
+function initTesti(){
+  testiSlides = testiWrap.querySelectorAll('.testi-slide');
+  testiDots = testiWrap.querySelectorAll('.testi-dot');
+  testiDots.forEach(function(dot){
+    dot.addEventListener('click', function(){
+      showTesti(parseInt(dot.getAttribute('data-i'), 10));
+      resetTestiTimer();
+    });
+  });
+  testiTimer = setInterval(function(){ showTesti((testiIndex + 1) % testiSlides.length); }, 5500);
+}
+function showTesti(i){
+  testiSlides[testiIndex].classList.remove('active');
+  testiDots[testiIndex].classList.remove('active');
+  testiIndex = i;
+  testiSlides[testiIndex].classList.add('active');
+  testiDots[testiIndex].classList.add('active');
+}
+function resetTestiTimer(){ clearInterval(testiTimer); testiTimer = setInterval(function(){ showTesti((testiIndex + 1) % testiSlides.length); }, 5500); }
+initTesti();
+
+/* ============================================================
+   FOOTER YEAR
+   ============================================================ */
+document.getElementById('year').textContent = new Date().getFullYear();
+
+/* ============================================================
+   HERO CANVAS — signature specimen-network animation
+   Nodes drift slowly and connect with lines when within range,
+   representing the network of schools / labs / simulations.
+   ============================================================ */
+var canvas = document.getElementById('labCanvas');
+var ctx = canvas.getContext('2d');
+var nodes = [];
+var NODE_COUNT = 46;
+var W, H;
+
+function resizeCanvas(){
+  var hero = document.querySelector('.hero');
+  W = canvas.width = hero.offsetWidth;
+  H = canvas.height = hero.offsetHeight;
+}
+function initNodes(){
+  nodes = [];
+  for(var i=0;i<NODE_COUNT;i++){
+    nodes.push({
+      x: Math.random()*W,
+      y: Math.random()*H,
+      vx: (Math.random()-0.5)*0.25,
+      vy: (Math.random()-0.5)*0.25,
+      r: Math.random()*1.6 + 1
+    });
+  }
+}
+var reducedMotion = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+function drawFrame(){
+  ctx.clearRect(0,0,W,H);
+  var linkDist = 150;
+  for(var i=0;i<nodes.length;i++){
+    var n = nodes[i];
+    n.x += n.vx; n.y += n.vy;
+    if(n.x < 0 || n.x > W) n.vx *= -1;
+    if(n.y < 0 || n.y > H) n.vy *= -1;
+
+    for(var j=i+1;j<nodes.length;j++){
+      var m = nodes[j];
+      var dx = n.x - m.x, dy = n.y - m.y;
+      var dist = Math.sqrt(dx*dx + dy*dy);
+      if(dist < linkDist){
+        ctx.strokeStyle = 'rgba(42,217,174,' + (0.16 * (1 - dist/linkDist)) + ')';
+        ctx.lineWidth = 1;
+        ctx.beginPath();
+        ctx.moveTo(n.x, n.y);
+        ctx.lineTo(m.x, m.y);
+        ctx.stroke();
+      }
+    }
+  }
+  for(var k=0;k<nodes.length;k++){
+    var p = nodes[k];
+    ctx.fillStyle = 'rgba(210,168,87,0.55)';
+    ctx.beginPath();
+    ctx.arc(p.x, p.y, p.r, 0, Math.PI*2);
+    ctx.fill();
+  }
+  if(!reducedMotion) requestAnimationFrame(drawFrame);
+}
+
+resizeCanvas();
+initNodes();
+drawFrame();
+window.addEventListener('resize', function(){
+  resizeCanvas();
+  initNodes();
+  if(reducedMotion) drawFrame();
+});
+
+/* ============================================================
+   SMOOTH SCROLL for in-page anchor links (fallback / offset)
+   ============================================================ */
+document.querySelectorAll('a[href^="#"]').forEach(function(a){
+  a.addEventListener('click', function(e){
+    var id = a.getAttribute('href');
+    if(id.length > 1){
+      var target = document.querySelector(id);
+      if(target){
+        e.preventDefault();
+        var offset = 84;
+        var top = target.getBoundingClientRect().top + window.pageYOffset - offset;
+        window.scrollTo({top: top, behavior:'smooth'});
+      }
+    }
+  });
+});
+
+})();
+</script>
+</body>
+</html>
