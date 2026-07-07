@@ -1,0 +1,1258 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Schools — Explore the Schools of GBLN</title>
+<meta name="description" content="Explore all 20 Schools of the Global Business Laboratory Network — each a world-class center of excellence built from specialized laboratories and immersive business simulations.">
+
+<style>
+/* ============================================================
+   GBLN — DESIGN TOKENS (shared with index.html / about.html)
+   ============================================================ */
+:root{
+  --ink:#080b11;
+  --ink-2:#0d121a;
+  --panel:#0f1520;
+  --panel-2:#131b28;
+  --line: rgba(233,238,244,0.09);
+  --line-strong: rgba(233,238,244,0.16);
+  --glass: rgba(255,255,255,0.035);
+  --glass-strong: rgba(255,255,255,0.06);
+  --teal:#2ad9ae;
+  --teal-dim: rgba(42,217,174,0.14);
+  --brass:#d2a857;
+  --brass-dim: rgba(210,168,87,0.14);
+  --text:#e9eef4;
+  --text-dim:#8d99a8;
+  --text-faint:#5c6878;
+  --serif: Georgia, 'Iowan Old Style', 'Palatino Linotype', 'Times New Roman', serif;
+  --sans: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+  --mono: 'SF Mono', 'Courier New', Consolas, monospace;
+  --ease: cubic-bezier(.22,.61,.36,1);
+  --container: 1240px;
+}
+
+*{margin:0;padding:0;box-sizing:border-box;}
+html{scroll-behavior:smooth;}
+body{
+  background:var(--ink);
+  color:var(--text);
+  font-family:var(--sans);
+  font-size:16px;
+  line-height:1.6;
+  overflow-x:hidden;
+  -webkit-font-smoothing:antialiased;
+}
+@media (prefers-reduced-motion: reduce){
+  *{animation-duration:0.01ms !important; animation-iteration-count:1 !important; transition-duration:0.01ms !important; scroll-behavior:auto !important;}
+}
+
+a{color:inherit;text-decoration:none;}
+ul{list-style:none;}
+button{font-family:inherit;cursor:pointer;border:none;background:none;color:inherit;}
+img{max-width:100%;display:block;}
+:focus-visible{outline:2px solid var(--teal);outline-offset:3px;}
+
+.wrap{max-width:var(--container);margin:0 auto;padding:0 32px;}
+.eyebrow{
+  font-family:var(--mono);
+  font-size:12px;
+  letter-spacing:.14em;
+  text-transform:uppercase;
+  color:var(--teal);
+  display:inline-flex;
+  align-items:center;
+  gap:10px;
+  margin-bottom:18px;
+}
+.eyebrow::before{
+  content:'';
+  width:20px;height:1px;
+  background:var(--teal);
+  display:inline-block;
+}
+h1,h2,h3,h4{font-family:var(--serif);font-weight:400;letter-spacing:-0.01em;}
+.section-head{max-width:680px;margin-bottom:56px;}
+.section-head h2{font-size:clamp(28px,3.6vw,44px);line-height:1.15;color:var(--text);}
+.section-head p{color:var(--text-dim);margin-top:16px;font-size:17px;max-width:560px;}
+.section{padding:120px 0;position:relative;}
+.section-alt{background:linear-gradient(180deg, var(--ink-2), var(--ink));}
+.divider{height:1px;background:linear-gradient(90deg, transparent, var(--line-strong), transparent);}
+
+/* Buttons */
+.btn{
+  position:relative;
+  overflow:hidden;
+  display:inline-flex;
+  align-items:center;
+  gap:10px;
+  padding:14px 28px;
+  border-radius:8px;
+  font-size:14.5px;
+  font-weight:600;
+  letter-spacing:.01em;
+  transition:transform .35s var(--ease), box-shadow .35s var(--ease), background .35s var(--ease), border-color .35s var(--ease);
+  white-space:nowrap;
+}
+.btn-primary{
+  background:var(--teal);
+  color:#06120e;
+}
+.btn-primary:hover{transform:translateY(-2px); box-shadow:0 14px 30px -10px rgba(42,217,174,.55);}
+.btn-ghost{
+  background:var(--glass);
+  border:1px solid var(--line-strong);
+  color:var(--text);
+  backdrop-filter:blur(8px);
+}
+.btn-ghost:hover{background:var(--glass-strong); border-color:var(--teal); transform:translateY(-2px);}
+.btn-sm{padding:10px 18px;font-size:13px;border-radius:7px;}
+.ripple{position:absolute;border-radius:50%;background:rgba(255,255,255,.35);transform:scale(0);animation:rippleAnim .6s ease-out;pointer-events:none;}
+@keyframes rippleAnim{to{transform:scale(3);opacity:0;}}
+
+/* ============ HEADER ============ */
+header{
+  position:fixed;top:0;left:0;right:0;z-index:900;
+  padding:20px 0;
+  transition:padding .35s var(--ease), background .35s var(--ease), border-color .35s var(--ease);
+  border-bottom:1px solid transparent;
+}
+header.scrolled{
+  padding:12px 0;
+  background:rgba(8,11,17,0.78);
+  backdrop-filter:blur(16px) saturate(140%);
+  border-bottom:1px solid var(--line);
+}
+.nav-row{display:flex;align-items:center;justify-content:space-between;gap:20px;}
+.brand{display:flex;align-items:center;gap:12px;flex-shrink:0;}
+.brand-mark{
+  width:38px;height:38px;border-radius:9px;
+  background:linear-gradient(155deg, var(--teal), #0e8a6d);
+  display:flex;align-items:center;justify-content:center;
+  font-family:var(--serif); font-size:17px; color:#06120e; font-weight:700;
+  position:relative;
+  box-shadow:0 0 0 1px rgba(42,217,174,.3), 0 8px 20px -8px rgba(42,217,174,.6);
+}
+.brand-text{display:flex;flex-direction:column;line-height:1.15;}
+.brand-text b{font-family:var(--serif);font-size:16.5px;letter-spacing:.01em;}
+.brand-text span{font-family:var(--mono);font-size:10px;letter-spacing:.1em;color:var(--text-dim);text-transform:uppercase;}
+.nav-center{display:flex;gap:1px;}
+.nav-center a{
+  padding:9px 11px;font-size:13.5px;color:var(--text-dim);border-radius:6px;
+  transition:color .25s, background .25s;
+  white-space:nowrap;
+}
+.nav-center a:hover{color:var(--text); background:var(--glass);}
+.nav-center a.active{color:var(--teal);}
+.nav-right{display:flex;align-items:center;gap:10px;flex-shrink:0;}
+.icon-btn{
+  width:38px;height:38px;border-radius:8px;display:flex;align-items:center;justify-content:center;
+  color:var(--text-dim); font-size:16px; transition:background .25s, color .25s;
+}
+.icon-btn:hover{background:var(--glass);color:var(--text);}
+.burger{display:none;flex-direction:column;gap:5px;width:38px;height:38px;align-items:center;justify-content:center;flex-shrink:0;}
+.burger span{width:20px;height:1.5px;background:var(--text);transition:all .3s var(--ease);}
+.burger.open span:nth-child(1){transform:translateY(6.5px) rotate(45deg);}
+.burger.open span:nth-child(2){opacity:0;}
+.burger.open span:nth-child(3){transform:translateY(-6.5px) rotate(-45deg);}
+
+.mobile-nav{
+  position:fixed;top:0;right:-100%;width:min(340px,86vw);height:100vh;
+  background:rgba(10,14,20,.98);backdrop-filter:blur(20px);
+  border-left:1px solid var(--line);
+  z-index:1000;transition:right .4s var(--ease);
+  padding:100px 32px 32px;display:flex;flex-direction:column;gap:6px;
+  overflow-y:auto;
+}
+.mobile-nav.open{right:0;}
+.mobile-nav a{padding:14px 4px;font-size:16px;border-bottom:1px solid var(--line);color:var(--text-dim);}
+.mobile-nav a:hover{color:var(--teal);}
+.mobile-nav a.active{color:var(--teal);}
+.nav-overlay{position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:999;opacity:0;pointer-events:none;transition:opacity .3s;}
+.nav-overlay.open{opacity:1;pointer-events:auto;}
+
+/* Search popup (global quick search) */
+.search-popup{
+  position:fixed;inset:0;background:rgba(6,9,14,.9);backdrop-filter:blur(10px);
+  z-index:1100;display:flex;align-items:flex-start;justify-content:center;
+  padding-top:14vh;opacity:0;pointer-events:none;transition:opacity .3s;
+}
+.search-popup.open{opacity:1;pointer-events:auto;}
+.search-box{width:min(600px,88vw);}
+.search-box input{
+  width:100%;background:var(--panel-2);border:1px solid var(--line-strong);
+  padding:20px 22px;border-radius:12px;color:var(--text);font-size:18px;font-family:var(--serif);
+}
+.search-box input::placeholder{color:var(--text-faint);}
+.search-hint{margin-top:14px;color:var(--text-faint);font-size:13px;font-family:var(--mono);text-align:center;}
+
+/* ============ HERO ============ */
+.hero{
+  position:relative;
+  min-height:88vh;
+  display:flex;align-items:center;
+  padding:150px 0 80px;
+  background:
+    radial-gradient(ellipse 800px 500px at 15% 0%, rgba(42,217,174,.10), transparent 60%),
+    radial-gradient(ellipse 700px 500px at 100% 30%, rgba(210,168,87,.07), transparent 60%),
+    var(--ink);
+  overflow:hidden;
+}
+#labCanvas{position:absolute;inset:0;width:100%;height:100%;opacity:.5;}
+.hero-inner{position:relative;z-index:2;display:grid;grid-template-columns:1.15fr .85fr;gap:60px;align-items:center;width:100%;}
+.hero-copy h1{
+  font-size:clamp(38px,5vw,62px);
+  line-height:1.06; letter-spacing:-0.02em; color:var(--text);
+}
+.hero-copy h1 em{font-style:normal;color:var(--teal);}
+.hero-copy p{color:var(--text-dim);font-size:17.5px;max-width:540px;margin-top:20px;}
+.hero-actions{display:flex;gap:14px;margin-top:38px;flex-wrap:wrap;}
+
+.hero-panel{
+  position:relative;
+  border-radius:20px;
+  background:var(--glass);
+  border:1px solid var(--line-strong);
+  backdrop-filter:blur(18px);
+  padding:26px;
+  animation:floatY 7s ease-in-out infinite;
+}
+@keyframes floatY{0%,100%{transform:translateY(0);}50%{transform:translateY(-14px);}}
+.hero-panel-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:18px;}
+.hero-panel-head span{font-family:var(--mono);font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--text-faint);}
+.hero-dot{width:8px;height:8px;border-radius:50%;background:var(--teal);box-shadow:0 0 0 4px var(--teal-dim);}
+.hero-row{display:flex;justify-content:space-between;align-items:center;padding:13px 0;border-bottom:1px solid var(--line);}
+.hero-row:last-child{border-bottom:none;}
+.hero-row b{font-weight:600;font-size:14.5px;}
+.hero-row small{display:block;color:var(--text-faint);font-size:11.5px;font-family:var(--mono);margin-top:2px;}
+.hero-tag{font-family:var(--mono);font-size:11px;padding:4px 9px;border-radius:5px;background:var(--teal-dim);color:var(--teal);}
+.hero-tag.brass{background:var(--brass-dim);color:var(--brass);}
+.hero-float-card{
+  position:absolute; background:var(--glass-strong); border:1px solid var(--line-strong);
+  border-radius:12px; padding:12px 16px; backdrop-filter:blur(12px);
+  font-family:var(--mono); font-size:11.5px; color:var(--text-dim);
+  animation:floatY 8s ease-in-out infinite;
+}
+.hero-float-card.a{top:-30px;right:-14px;animation-delay:.5s;}
+.hero-float-card.b{bottom:-22px;left:-24px;animation-delay:1.2s;}
+.hero-float-card b{color:var(--teal);display:block;font-family:var(--sans);font-size:17px;}
+
+/* Reveal animation utility */
+.reveal{opacity:0;transform:translateY(28px);transition:opacity .8s var(--ease), transform .8s var(--ease);}
+.reveal.in{opacity:1;transform:translateY(0);}
+.reveal-stagger > *{transition-delay:calc(var(--i,0) * 70ms);}
+
+/* ============ STATS BAND ============ */
+.stats-band{
+  padding:64px 0; border-top:1px solid var(--line); border-bottom:1px solid var(--line);
+  background:var(--panel);
+}
+.stats-grid{display:grid;grid-template-columns:repeat(6,1fr);gap:20px;}
+.stat-item{text-align:center;border-right:1px solid var(--line);}
+.stat-item:last-child{border-right:none;}
+.stat-num{
+  font-family:var(--serif); font-size:clamp(28px,3vw,40px); color:var(--teal); letter-spacing:-0.01em;
+}
+.stat-label{margin-top:8px;font-family:var(--mono);font-size:11.5px;letter-spacing:.08em;text-transform:uppercase;color:var(--text-dim);}
+
+/* ============ SEARCH & FILTER ============ */
+.filter-panel{
+  background:var(--glass); border:1px solid var(--line-strong); border-radius:20px;
+  padding:34px; backdrop-filter:blur(14px);
+}
+.filter-top{display:flex;gap:16px;align-items:center;flex-wrap:wrap;justify-content:space-between;margin-bottom:22px;}
+.search-input-wrap{
+  position:relative; flex:1; min-width:260px;
+}
+.search-input-wrap .glyph{
+  position:absolute; left:18px; top:50%; transform:translateY(-50%);
+  color:var(--text-faint); font-size:16px; pointer-events:none;
+}
+.search-input-wrap input{
+  width:100%; background:var(--panel-2); border:1px solid var(--line-strong);
+  border-radius:11px; padding:15px 18px 15px 46px; color:var(--text);
+  font-family:var(--sans); font-size:15px; transition:border-color .25s;
+}
+.search-input-wrap input:focus{border-color:var(--teal);}
+.search-input-wrap input::placeholder{color:var(--text-faint);}
+.results-counter{
+  font-family:var(--mono); font-size:13px; color:var(--text-dim); white-space:nowrap;
+  padding:12px 18px; border:1px solid var(--line); border-radius:10px; background:var(--panel-2);
+}
+.results-counter b{color:var(--teal); font-size:15px;}
+.filter-group{margin-top:18px;}
+.filter-group-label{
+  font-family:var(--mono); font-size:11px; letter-spacing:.09em; text-transform:uppercase;
+  color:var(--text-faint); margin-bottom:12px; display:block;
+}
+.chip-row{display:flex;flex-wrap:wrap;gap:9px;}
+.chip{
+  font-family:var(--mono); font-size:12.5px; letter-spacing:.02em;
+  padding:9px 16px; border-radius:20px; border:1px solid var(--line-strong);
+  color:var(--text-dim); background:var(--panel-2);
+  transition:all .25s var(--ease);
+}
+.chip:hover{border-color:var(--teal); color:var(--text);}
+.chip.active{background:var(--teal); color:#06120e; border-color:var(--teal); font-weight:600;}
+
+/* ============ ARCHITECTURE INFOGRAPHIC ============ */
+.arch-flow{display:flex;flex-direction:column;align-items:center;gap:0;}
+.arch-step{
+  position:relative; width:100%; max-width:520px;
+  background:var(--panel-2); border:1px solid var(--line-strong); border-radius:14px;
+  padding:22px 30px; text-align:center;
+  transition:transform .35s var(--ease), border-color .35s var(--ease);
+}
+.arch-step:hover{transform:translateY(-4px) scale(1.02); border-color:var(--teal);}
+.arch-step .n{font-family:var(--serif); font-size:26px; color:var(--teal);}
+.arch-step .l{font-family:var(--mono); font-size:11.5px; letter-spacing:.08em; text-transform:uppercase; color:var(--text-dim); margin-top:6px;}
+.arch-step.root{background:linear-gradient(155deg, var(--teal-dim), var(--panel-2)); border-color:var(--teal);}
+.arch-step.root .n{font-family:var(--serif); font-size:20px; color:var(--text); line-height:1.3;}
+.arch-connector{
+  width:1px; height:38px;
+  background:repeating-linear-gradient(180deg, var(--line-strong) 0 6px, transparent 6px 12px);
+  position:relative;
+}
+.arch-connector::after{
+  content:'';
+  position:absolute; bottom:-1px; left:50%; transform:translateX(-50%);
+  width:0;height:0; border-left:5px solid transparent; border-right:5px solid transparent;
+  border-top:7px solid var(--text-faint);
+}
+
+/* ============ SCHOOL CARDS ============ */
+.school-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:22px;}
+.school-card{
+  position:relative;
+  background:var(--glass);
+  border:1px solid var(--line);
+  border-radius:16px;
+  padding:28px 26px 26px;
+  transition:transform .4s var(--ease), border-color .4s var(--ease), background .4s var(--ease), opacity .3s, display .3s;
+  display:flex; flex-direction:column;
+}
+.school-card:hover{transform:translateY(-6px);border-color:var(--teal);background:var(--glass-strong);}
+.school-card.hidden{display:none;}
+.school-top{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:18px;}
+.school-icon{
+  width:50px;height:50px;border-radius:11px;
+  background:var(--teal-dim); color:var(--teal);
+  display:flex;align-items:center;justify-content:center;font-size:22px;
+  flex-shrink:0;
+}
+.demand-badge{
+  font-family:var(--mono); font-size:10px; letter-spacing:.06em; text-transform:uppercase;
+  padding:5px 10px; border-radius:6px; white-space:nowrap;
+}
+.demand-badge.very-high{background:var(--teal-dim); color:var(--teal);}
+.demand-badge.high{background:var(--brass-dim); color:var(--brass);}
+.demand-badge.emerging{background:rgba(233,238,244,.08); color:var(--text-dim);}
+.school-card h3{font-size:18px;color:var(--text);margin-bottom:9px;line-height:1.3;}
+.school-card .desc{color:var(--text-dim);font-size:13.8px;line-height:1.6;margin-bottom:16px;}
+.school-cat-tag{
+  font-family:var(--mono); font-size:10.5px; letter-spacing:.05em; text-transform:uppercase;
+  color:var(--brass); margin-bottom:14px; display:block;
+}
+.career-list{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:18px;}
+.career-chip{font-size:11.5px;padding:5px 10px;border-radius:20px;border:1px solid var(--line-strong);color:var(--text-dim);}
+.school-meta{display:flex;gap:18px;margin-bottom:20px;font-family:var(--mono);font-size:12px;color:var(--text-faint);}
+.school-meta span b{color:var(--text);font-family:var(--sans);font-weight:700;}
+.school-card .card-link{margin-top:auto;}
+.card-link{
+  display:inline-flex;align-items:center;gap:6px;
+  font-family:var(--mono);font-size:12px;letter-spacing:.05em;text-transform:uppercase;color:var(--teal);
+}
+.card-link .arrow{transition:transform .3s var(--ease);}
+.school-card:hover .card-link .arrow{transform:translateX(4px);}
+.no-results{
+  grid-column:1/-1; text-align:center; padding:60px 20px; color:var(--text-faint);
+  font-family:var(--mono); font-size:14px;
+}
+
+/* ============ FEATURED SCHOOL BANNER ============ */
+.featured-banner{
+  border-radius:24px; border:1px solid var(--line-strong);
+  background:
+    radial-gradient(ellipse 700px 400px at 85% 10%, rgba(42,217,174,.14), transparent 60%),
+    radial-gradient(ellipse 500px 350px at 5% 100%, rgba(210,168,87,.10), transparent 60%),
+    var(--panel);
+  padding:64px; display:grid; grid-template-columns:1fr 1.2fr; gap:56px; align-items:center;
+  position:relative; overflow:hidden;
+}
+.featured-orb-wrap{display:flex;align-items:center;justify-content:center;}
+.featured-orb{
+  width:230px;height:230px;border-radius:26px;position:relative;
+  background:linear-gradient(155deg, rgba(42,217,174,.16), rgba(210,168,87,.10));
+  border:1px solid var(--line-strong);
+  display:flex;align-items:center;justify-content:center;
+  animation:orbPulse 4.5s ease-in-out infinite;
+}
+@keyframes orbPulse{0%,100%{box-shadow:0 0 0 0 rgba(42,217,174,.25);}50%{box-shadow:0 0 0 22px rgba(42,217,174,0);}}
+.featured-orb .glyph{font-size:78px; filter:drop-shadow(0 0 24px rgba(42,217,174,.5));}
+.featured-meta{display:flex;gap:28px;margin-top:24px;flex-wrap:wrap;}
+.featured-meta div{text-align:left;}
+.featured-meta .n{font-family:var(--serif);font-size:26px;color:var(--teal);}
+.featured-meta .l{font-family:var(--mono);font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--text-dim);margin-top:4px;}
+
+/* ============ CAREER PATHS ============ */
+.career-grid{display:grid;grid-template-columns:repeat(6,1fr);gap:14px;}
+.career-path-card{
+  background:var(--panel-2); border:1px solid var(--line); border-radius:14px;
+  padding:24px 14px; text-align:center;
+  transition:transform .35s var(--ease), border-color .35s var(--ease), background .35s var(--ease);
+}
+.career-path-card:hover{transform:translateY(-5px); border-color:var(--teal); background:var(--glass-strong);}
+.career-path-card .glyph{font-size:26px; color:var(--teal); margin-bottom:12px;}
+.career-path-card .label{font-size:13px; color:var(--text); font-weight:600;}
+
+/* AURA-style list reused for feature list */
+.aura-list{margin-top:26px;display:flex;flex-direction:column;gap:14px;}
+.aura-list li{display:flex;gap:14px;align-items:flex-start;color:var(--text-dim);font-size:14.5px;}
+.aura-list .mark{
+  font-family:var(--mono); font-size:11px; color:var(--teal);
+  border:1px solid var(--line-strong); border-radius:6px; padding:3px 7px; flex-shrink:0; margin-top:2px;
+}
+
+/* ============ CARD GRID GENERIC ============ */
+.grid{display:grid;gap:22px;}
+.grid-3{grid-template-columns:repeat(3,1fr);}
+.spec-card{
+  position:relative;
+  background:var(--glass);
+  border:1px solid var(--line);
+  border-radius:14px;
+  padding:30px 26px;
+  transition:transform .4s var(--ease), border-color .4s var(--ease), background .4s var(--ease);
+}
+.spec-card:hover{transform:translateY(-6px);border-color:var(--teal);background:var(--glass-strong);}
+.spec-card::before, .spec-card::after{
+  content:''; position:absolute; width:14px;height:14px; border:1px solid var(--line-strong); opacity:0; transition:opacity .4s;
+}
+.spec-card::before{top:8px;left:8px;border-right:none;border-bottom:none;}
+.spec-card::after{bottom:8px;right:8px;border-left:none;border-top:none;}
+.spec-card:hover::before, .spec-card:hover::after{opacity:1;border-color:var(--teal);}
+.card-icon{
+  width:48px;height:48px;border-radius:10px;
+  background:var(--teal-dim); color:var(--teal);
+  display:flex;align-items:center;justify-content:center;font-size:21px;
+  margin-bottom:20px;
+}
+.spec-card h3{font-size:19px;color:var(--text);margin-bottom:10px;}
+.spec-card p{color:var(--text-dim);font-size:14.5px;line-height:1.65;}
+
+/* CTA */
+.cta-band{
+  border-radius:24px; border:1px solid var(--line-strong);
+  background:
+    radial-gradient(ellipse 700px 400px at 20% 0%, rgba(42,217,174,.16), transparent 60%),
+    radial-gradient(ellipse 500px 300px at 90% 100%, rgba(210,168,87,.12), transparent 60%),
+    var(--panel);
+  padding:80px 60px; text-align:center;
+}
+.cta-band h2{font-size:clamp(28px,3.8vw,46px);}
+.cta-band p{color:var(--text-dim);margin:18px 0 34px;font-size:16.5px;}
+.cta-actions{display:flex;gap:16px;justify-content:center;flex-wrap:wrap;}
+
+/* Footer */
+footer{background:var(--ink-2);border-top:1px solid var(--line);padding:80px 0 30px;}
+.foot-grid{display:grid;grid-template-columns:1.5fr repeat(4,1fr);gap:40px;margin-bottom:60px;}
+.foot-brand p{color:var(--text-faint);font-size:13.5px;margin-top:16px;max-width:280px;}
+.foot-col h5{font-family:var(--mono);font-size:11.5px;text-transform:uppercase;letter-spacing:.08em;color:var(--text);margin-bottom:18px;}
+.foot-col a{display:block;color:var(--text-faint);font-size:14px;margin-bottom:11px;transition:color .25s;}
+.foot-col a:hover{color:var(--teal);}
+.foot-social{display:flex;gap:10px;margin-top:20px;}
+.foot-social a{width:36px;height:36px;border:1px solid var(--line-strong);border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:14px;color:var(--text-dim);transition:all .25s;}
+.foot-social a:hover{border-color:var(--teal);color:var(--teal);}
+.foot-bottom{
+  border-top:1px solid var(--line); padding-top:26px;
+  display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px;
+  font-size:13px;color:var(--text-faint); font-family:var(--mono);
+}
+
+/* Back to top */
+.to-top{
+  position:fixed;bottom:28px;right:28px;width:46px;height:46px;border-radius:50%;
+  background:var(--teal); color:#06120e; display:flex;align-items:center;justify-content:center;
+  font-size:16px; opacity:0;pointer-events:none;transform:translateY(10px);
+  transition:opacity .35s,transform .35s; z-index:500;
+  box-shadow:0 10px 26px -8px rgba(42,217,174,.6);
+}
+.to-top.show{opacity:1;pointer-events:auto;transform:translateY(0);}
+
+/* Responsive */
+@media (max-width:1180px){
+  .nav-center a{padding:9px 8px;font-size:13px;}
+}
+@media (max-width:1080px){
+  .stats-grid{grid-template-columns:repeat(3,1fr);}
+  .stat-item:nth-child(3){border-right:none;}
+  .school-grid{grid-template-columns:repeat(2,1fr);}
+  .career-grid{grid-template-columns:repeat(4,1fr);}
+  .featured-banner{grid-template-columns:1fr;text-align:center;}
+  .featured-orb-wrap{order:-1;}
+  .featured-meta{justify-content:center;}
+  .aura-list li{text-align:left;}
+}
+@media (max-width:860px){
+  .nav-center{display:none;}
+  .burger{display:flex;}
+  .hero-inner{grid-template-columns:1fr;}
+  .hero-panel{order:-1;max-width:420px;margin:0 auto;}
+  .grid-3{grid-template-columns:repeat(2,1fr);}
+  .school-grid{grid-template-columns:1fr;}
+  .foot-grid{grid-template-columns:1fr 1fr;}
+  .career-grid{grid-template-columns:repeat(3,1fr);}
+  .filter-top{flex-direction:column;align-items:stretch;}
+  .results-counter{text-align:center;}
+}
+@media (max-width:600px){
+  .wrap{padding:0 20px;}
+  .section{padding:80px 0;}
+  .stats-grid{grid-template-columns:repeat(2,1fr);}
+  .stat-item:nth-child(2n){border-right:none;}
+  .grid-3{grid-template-columns:1fr;}
+  .career-grid{grid-template-columns:repeat(2,1fr);}
+  .filter-panel{padding:24px 18px;}
+  .arch-step{padding:18px 20px;}
+  .featured-banner{padding:40px 26px;}
+  .cta-band{padding:56px 26px;}
+  .foot-grid{grid-template-columns:1fr;gap:34px;}
+  .foot-bottom{flex-direction:column;text-align:center;}
+}
+</style>
+</head>
+<body>
+
+<!-- ============ HEADER ============ -->
+<header id="siteHeader">
+  <div class="wrap nav-row">
+    <a href="index.html" class="brand">
+      <div class="brand-mark">G</div>
+      <div class="brand-text">
+        <b>Global Business Laboratory Network</b>
+        <span>GBLN &middot; Est. Research Consortium</span>
+      </div>
+    </a>
+    <nav class="nav-center">
+      <a href="index.html">Home</a>
+      <a href="about.html">About</a>
+      <a href="schools.html" class="active">Schools</a>
+      <a href="laboratories.html">Laboratories</a>
+      <a href="simulations.html">Simulations</a>
+      <a href="research.html">Research</a>
+      <a href="publications.html">Publications</a>
+      <a href="industry.html">Industry</a>
+      <a href="faculty.html">Faculty</a>
+      <a href="news.html">News</a>
+      <a href="contact.html">Contact</a>
+    </nav>
+    <div class="nav-right">
+      <button class="icon-btn" id="searchOpen" aria-label="Search">&#9906;</button>
+      <a href="#" class="btn btn-primary btn-sm">Launch Platform</a>
+      <button class="burger" id="burgerBtn" aria-label="Menu"><span></span><span></span><span></span></button>
+    </div>
+  </div>
+</header>
+
+<div class="nav-overlay" id="navOverlay"></div>
+<nav class="mobile-nav" id="mobileNav">
+  <a href="index.html">Home</a>
+  <a href="about.html">About</a>
+  <a href="schools.html" class="active">Schools</a>
+  <a href="laboratories.html">Laboratories</a>
+  <a href="simulations.html">Simulations</a>
+  <a href="research.html">Research</a>
+  <a href="publications.html">Publications</a>
+  <a href="industry.html">Industry</a>
+  <a href="faculty.html">Faculty</a>
+  <a href="news.html">News</a>
+  <a href="contact.html">Contact</a>
+</nav>
+
+<div class="search-popup" id="searchPopup">
+  <div class="search-box">
+    <input type="text" placeholder="Search schools, laboratories, simulations…" id="globalSearchInput" autocomplete="off">
+    <p class="search-hint">Press ESC to close</p>
+  </div>
+</div>
+
+<!-- ============ HERO ============ -->
+<section class="hero" id="home">
+  <canvas id="labCanvas"></canvas>
+  <div class="wrap hero-inner">
+    <div class="hero-copy reveal in">
+      <div class="eyebrow">Schools of GBLN</div>
+      <h1>Explore Our<br><em>Schools</em></h1>
+      <p>Every school represents a world-class center of excellence containing specialized laboratories and immersive business simulations designed to prepare future business leaders.</p>
+      <div class="hero-actions">
+        <a href="#schools" class="btn btn-primary">Browse All Schools</a>
+        <a href="#architecture" class="btn btn-ghost">See the Network</a>
+      </div>
+    </div>
+    <div class="hero-panel">
+      <div class="hero-float-card a"><b>20</b>Schools Live</div>
+      <div class="hero-panel-head">
+        <span>Network Console</span>
+        <span class="hero-dot"></span>
+      </div>
+      <div class="hero-row">
+        <div><b>School of AI for Business</b><small>Featured This Month</small></div>
+        <span class="hero-tag brass">Featured</span>
+      </div>
+      <div class="hero-row">
+        <div><b>School of Business Analytics</b><small>10 Laboratories</small></div>
+        <span class="hero-tag">Live</span>
+      </div>
+      <div class="hero-row">
+        <div><b>School of Finance &amp; Investment</b><small>200+ Simulations</small></div>
+        <span class="hero-tag">Live</span>
+      </div>
+      <div class="hero-row">
+        <div><b>School of Sustainability &amp; ESG</b><small>Enrolling Now</small></div>
+        <span class="hero-tag brass">New</span>
+      </div>
+      <div class="hero-float-card b"><b>4,000+</b>Simulations Across Schools</div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ QUICK STATS ============ -->
+<div class="stats-band">
+  <div class="wrap stats-grid">
+    <div class="stat-item"><div class="stat-num" data-count="20">0</div><div class="stat-label">Schools</div></div>
+    <div class="stat-item"><div class="stat-num" data-count="200">0</div><div class="stat-label">Laboratories</div></div>
+    <div class="stat-item"><div class="stat-num" data-count="4000">0</div><div class="stat-label">Simulations</div></div>
+    <div class="stat-item"><div class="stat-num" data-count="100">0</div><div class="stat-label">Certifications</div></div>
+    <div class="stat-item"><div class="stat-num" data-count="50">0</div><div class="stat-label">Industry Partners</div></div>
+    <div class="stat-item"><div class="stat-num" data-count="100000">0</div><div class="stat-label">Future Learners</div></div>
+  </div>
+</div>
+
+<!-- ============ SEARCH & FILTER + SCHOOLS GRID ============ -->
+<section class="section" id="schools">
+  <div class="wrap">
+    <div class="section-head reveal">
+      <div class="eyebrow">Find Your School</div>
+      <h2>Twenty disciplines. One laboratory method.</h2>
+      <p>Search by school name, career outcome, or future skill — then narrow the list by category or track to find the school built for the future you want.</p>
+    </div>
+
+    <div class="filter-panel reveal" style="margin-bottom:56px;">
+      <div class="filter-top">
+        <div class="search-input-wrap">
+          <span class="glyph">&#9906;</span>
+          <input type="text" id="schoolSearch" placeholder="Search by school name, career, industry or future skill…" autocomplete="off">
+        </div>
+        <div class="results-counter"><b id="resultsCount">20</b>&nbsp; of 20 schools shown</div>
+      </div>
+      <div class="filter-group">
+        <span class="filter-group-label">Category</span>
+        <div class="chip-row" id="categoryChips"></div>
+      </div>
+      <div class="filter-group">
+        <span class="filter-group-label">Track / Difficulty</span>
+        <div class="chip-row" id="levelChips"></div>
+      </div>
+    </div>
+
+    <!-- ============ ARCHITECTURE INFOGRAPHIC ============ -->
+    <div id="architecture" style="margin-bottom:80px;">
+      <div class="section-head reveal" style="margin-left:auto;margin-right:auto;text-align:center;">
+        <div class="eyebrow" style="justify-content:center;">Network Architecture</div>
+        <h2>From network to portfolio.</h2>
+      </div>
+      <div class="arch-flow reveal">
+        <div class="arch-step root"><div class="n">Global Business Laboratory Network</div></div>
+        <div class="arch-connector"></div>
+        <div class="arch-step"><div class="n">20</div><div class="l">Schools</div></div>
+        <div class="arch-connector"></div>
+        <div class="arch-step"><div class="n">200</div><div class="l">Laboratories</div></div>
+        <div class="arch-connector"></div>
+        <div class="arch-step"><div class="n">4,000+</div><div class="l">Simulations</div></div>
+        <div class="arch-connector"></div>
+        <div class="arch-step"><div class="n">&#10003;</div><div class="l">Assessments</div></div>
+        <div class="arch-connector"></div>
+        <div class="arch-step"><div class="n">&#127891;</div><div class="l">Certifications</div></div>
+        <div class="arch-connector"></div>
+        <div class="arch-step"><div class="n">&#128188;</div><div class="l">Professional Portfolio</div></div>
+      </div>
+    </div>
+
+    <div class="school-grid reveal-stagger" id="schoolGrid"></div>
+  </div>
+</section>
+
+<!-- ============ FEATURED SCHOOL OF THE MONTH ============ -->
+<section class="section section-alt">
+  <div class="wrap">
+    <div class="section-head reveal">
+      <div class="eyebrow">Featured School of the Month</div>
+      <h2>School of Artificial Intelligence for Business.</h2>
+    </div>
+    <div class="featured-banner reveal">
+      <div class="featured-orb-wrap">
+        <div class="featured-orb"><span class="glyph">&#129302;</span></div>
+      </div>
+      <div>
+        <div class="eyebrow">Most In-Demand</div>
+        <h2 style="font-size:clamp(26px,3.2vw,38px);">AI-powered business transformation, taught as a laboratory discipline.</h2>
+        <p style="color:var(--text-dim);margin-top:14px;max-width:560px;">From intelligent automation to enterprise AI strategy, this school prepares operators who can deploy artificial intelligence responsibly inside real organizations — not just discuss it in theory.</p>
+        <ul class="aura-list">
+          <li><span class="mark">01</span>AI Business Consultant, AI Product Manager, Chief AI Officer and AI Strategist career tracks</li>
+          <li><span class="mark">02</span>10 dedicated laboratories spanning automation, strategy and enterprise AI</li>
+          <li><span class="mark">03</span>200+ simulations covering AI transformation scenarios end to end</li>
+        </ul>
+        <div class="featured-meta">
+          <div><div class="n">10</div><div class="l">Laboratories</div></div>
+          <div><div class="n">200+</div><div class="l">Simulations</div></div>
+          <div><div class="n">Very High</div><div class="l">Future Demand</div></div>
+        </div>
+        <div class="hero-actions" style="margin-top:34px;">
+          <a href="schools/ai-business/index.html" class="btn btn-primary">Explore This School</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ CAREER PATHS ============ -->
+<section class="section" id="careers">
+  <div class="wrap">
+    <div class="section-head reveal">
+      <div class="eyebrow">Career Paths</div>
+      <h2>Twelve directions. One shared method.</h2>
+      <p>Select a career path to filter the school directory above for programs that lead there.</p>
+    </div>
+    <div class="career-grid reveal-stagger" id="careerGrid"></div>
+  </div>
+</section>
+
+<!-- ============ GLOBAL IMPACT ============ -->
+<div class="stats-band section-alt" style="border-top:1px solid var(--line);border-bottom:1px solid var(--line);">
+  <div class="wrap">
+    <div class="section-head reveal" style="margin-bottom:36px;">
+      <div class="eyebrow">Global Impact</div>
+      <h2 style="font-size:clamp(24px,3vw,34px);">A network measured in outcomes.</h2>
+    </div>
+    <div class="stats-grid">
+      <div class="stat-item"><div class="stat-num" data-count="20">0</div><div class="stat-label">Schools</div></div>
+      <div class="stat-item"><div class="stat-num" data-count="200">0</div><div class="stat-label">Laboratories</div></div>
+      <div class="stat-item"><div class="stat-num" data-count="4000">0</div><div class="stat-label">Simulations</div></div>
+      <div class="stat-item"><div class="stat-num" data-count="100">0</div><div class="stat-label">Certifications</div></div>
+      <div class="stat-item"><div class="stat-num" data-count="50">0</div><div class="stat-label">Industry Partners</div></div>
+      <div class="stat-item"><div class="stat-num" data-count="100000">0</div><div class="stat-label">Future Learners</div></div>
+    </div>
+  </div>
+</div>
+
+<!-- ============ WHY STUDY AT GBLN ============ -->
+<section class="section">
+  <div class="wrap">
+    <div class="section-head reveal">
+      <div class="eyebrow">Why Study At GBLN</div>
+      <h2>A laboratory, not a lecture hall.</h2>
+      <p>Every school shares the same instructional core — laboratories, simulations, and an AI mentor available around the clock.</p>
+    </div>
+    <div class="grid grid-3 reveal-stagger">
+      <div class="spec-card reveal" style="--i:0"><div class="card-icon">&#9878;</div><h3>Laboratory-Based Learning</h3><p>Every module resolves into a laboratory task — a decision, a model, a negotiation — graded on outcome, not recall.</p></div>
+      <div class="spec-card reveal" style="--i:1"><div class="card-icon">&#10022;</div><h3>AI Mentor</h3><p>AURA observes every submission and simulation run, offering feedback calibrated to your specific decisions.</p></div>
+      <div class="spec-card reveal" style="--i:2"><div class="card-icon">&#9645;</div><h3>Real Business Simulations</h3><p>Over four thousand scenario-driven simulations, from startup pitches to full corporate turnarounds.</p></div>
+      <div class="spec-card reveal" style="--i:3"><div class="card-icon">&#128188;</div><h3>Industry Projects</h3><p>Curricula co-authored with operating partners across finance, technology, and consulting practice.</p></div>
+      <div class="spec-card reveal" style="--i:4"><div class="card-icon">&#128269;</div><h3>Research Driven</h3><p>A standing research faculty feeds every school's laboratory content with current case material.</p></div>
+      <div class="spec-card reveal" style="--i:5"><div class="card-icon">&#127891;</div><h3>Career Ready</h3><p>Credentials issued on demonstrated laboratory performance, recognized across our industry consortium.</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ CTA ============ -->
+<section class="section section-alt">
+  <div class="wrap">
+    <div class="cta-band reveal">
+      <div class="eyebrow" style="justify-content:center;">Get Started</div>
+      <h2>Choose Your School and Begin Your Journey</h2>
+      <p>Pick a discipline, enter its laboratories, and launch your first simulation this week.</p>
+      <div class="cta-actions">
+        <a href="laboratories.html" class="btn btn-ghost">Explore Laboratories</a>
+        <a href="simulations.html" class="btn btn-ghost">Browse Simulations</a>
+        <a href="#" class="btn btn-primary">Launch Platform</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ FOOTER ============ -->
+<footer>
+  <div class="wrap">
+    <div class="foot-grid">
+      <div class="foot-brand">
+        <div class="brand">
+          <div class="brand-mark">G</div>
+          <div class="brand-text"><b>GBLN</b><span>Global Business Laboratory Network</span></div>
+        </div>
+        <p>Learning Business by Doing Business. An AI-powered laboratory network for the next generation of operators.</p>
+        <div class="foot-social">
+          <a href="#" aria-label="LinkedIn">in</a>
+          <a href="#" aria-label="X">&#120143;</a>
+          <a href="#" aria-label="YouTube">&#9654;</a>
+          <a href="#" aria-label="Instagram">&#9678;</a>
+        </div>
+      </div>
+      <div class="foot-col">
+        <h5>About</h5>
+        <a href="about.html">Our Mission</a>
+        <a href="faculty.html">Faculty</a>
+        <a href="#">Governance</a>
+        <a href="#">Careers</a>
+      </div>
+      <div class="foot-col">
+        <h5>Schools</h5>
+        <a href="schools/ai-business/index.html">AI for Business</a>
+        <a href="schools/entrepreneurship/index.html">Entrepreneurship</a>
+        <a href="schools/finance/index.html">Finance</a>
+        <a href="schools/business-analytics/index.html">Analytics</a>
+      </div>
+      <div class="foot-col">
+        <h5>Laboratories</h5>
+        <a href="laboratories.html">Startup Incubation</a>
+        <a href="laboratories.html">Financial Modeling</a>
+        <a href="laboratories.html">Portfolio Management</a>
+        <a href="simulations.html">Simulations</a>
+      </div>
+      <div class="foot-col">
+        <h5>Contact</h5>
+        <a href="#">admissions@gbln.edu</a>
+        <a href="#">press@gbln.edu</a>
+        <a href="#">Partnerships</a>
+        <a href="research.html">Research Office</a>
+      </div>
+    </div>
+    <div class="divider"></div>
+    <div class="foot-bottom">
+      <span>&copy; <span id="year"></span> Global Business Laboratory Network. All rights reserved.</span>
+      <span>Privacy &middot; Terms &middot; Accessibility</span>
+    </div>
+  </div>
+</footer>
+
+<button class="to-top" id="toTop" aria-label="Back to top">&#8593;</button>
+
+<script>
+(function(){
+"use strict";
+
+/* ============================================================
+   DATA — the 20 Schools of GBLN
+   ============================================================ */
+var CATEGORIES = ['Technology & Data','Finance & Investment','Strategy & Leadership','Marketing & Commerce','Operations & Trade','People & Governance','Governance & Risk','Public & Social','Hospitality & Health'];
+var LEVELS = ['Core','Specialized','Executive'];
+
+var schools = [
+  {icon:'&#129302;', name:'School of Artificial Intelligence for Business', folder:'ai-business', category:'Technology & Data', level:'Specialized', demand:'Very High',
+   desc:'AI-powered business transformation, intelligent automation, AI strategy and enterprise AI.',
+   careers:['AI Business Consultant','AI Product Manager','Chief AI Officer','AI Strategist'], labs:10, sims:200},
+  {icon:'&#128202;', name:'School of Business Analytics & Data Science', folder:'business-analytics', category:'Technology & Data', level:'Specialized', demand:'Very High',
+   desc:'Business intelligence, predictive analytics, dashboards and decision science.',
+   careers:['Business Analyst','Data Analyst','BI Consultant','Analytics Manager'], labs:11, sims:230},
+  {icon:'&#128176;', name:'School of Finance & Investment', folder:'finance', category:'Finance & Investment', level:'Core', demand:'Very High',
+   desc:'Corporate finance, investment, valuation, fintech and financial decision making.',
+   careers:['Investment Analyst','Corporate Finance Manager','Fintech Strategist','Valuation Specialist'], labs:12, sims:240},
+  {icon:'&#128640;', name:'School of Entrepreneurship & Innovation', folder:'entrepreneurship', category:'Strategy & Leadership', level:'Core', demand:'High',
+   desc:'Startup creation, innovation, venture capital and incubation.',
+   careers:['Startup Founder','Venture Analyst','Innovation Manager','Incubation Lead'], labs:10, sims:200},
+  {icon:'&#128225;', name:'School of Information Systems & Digital Business', folder:'digital-business', category:'Technology & Data', level:'Specialized', demand:'Very High',
+   desc:'ERP, digital transformation, cloud business and enterprise systems.',
+   careers:['Digital Transformation Lead','ERP Consultant','Cloud Business Analyst','IS Manager'], labs:9, sims:190},
+  {icon:'&#127811;', name:'School of Sustainability, ESG & Responsible Business', folder:'esg', category:'Public & Social', level:'Specialized', demand:'Very High',
+   desc:'ESG, sustainability, climate finance and responsible business.',
+   careers:['ESG Analyst','Sustainability Manager','Climate Finance Specialist','Responsible Business Lead'], labs:9, sims:180},
+  {icon:'&#128274;', name:'School of Cyber Risk, Governance & Compliance', folder:'cyber-risk', category:'Governance & Risk', level:'Specialized', demand:'Very High',
+   desc:'Cyber governance, digital compliance, enterprise risk and business resilience.',
+   careers:['Cyber Risk Analyst','Compliance Officer','Enterprise Risk Manager','Resilience Lead'], labs:8, sims:170},
+  {icon:'&#127919;', name:'School of Marketing & Consumer Intelligence', folder:'marketing', category:'Marketing & Commerce', level:'Core', demand:'High',
+   desc:'Marketing strategy, branding, digital marketing and consumer analytics.',
+   careers:['Marketing Strategist','Brand Manager','Digital Marketer','Consumer Insights Analyst'], labs:10, sims:210},
+  {icon:'&#9878;', name:'School of Leadership, Innovation & Strategy', folder:'leadership', category:'Strategy & Leadership', level:'Executive', demand:'High',
+   desc:'Strategic leadership, innovation and executive decision making.',
+   careers:['Strategy Consultant','Executive Director','Innovation Lead','Change Manager'], labs:9, sims:190},
+  {icon:'&#128666;', name:'School of Supply Chain & Global Operations', folder:'supply-chain', category:'Operations & Trade', level:'Core', demand:'High',
+   desc:'Operations, logistics, procurement and global supply chain.',
+   careers:['Supply Chain Manager','Logistics Analyst','Procurement Lead','Operations Consultant'], labs:10, sims:200},
+  {icon:'&#127760;', name:'School of International Business & Global Trade', folder:'international-business', category:'Operations & Trade', level:'Core', demand:'High',
+   desc:'Global business, exports, imports and international trade.',
+   careers:['Trade Analyst','Export Manager','Global Business Consultant','International Strategist'], labs:9, sims:180},
+  {icon:'&#129309;', name:'School of Human Capital & Organizational Development', folder:'hr', category:'People & Governance', level:'Core', demand:'High',
+   desc:'Human resources, organizational behaviour and leadership development.',
+   careers:['HR Business Partner','Talent Manager','OD Consultant','L&D Lead'], labs:8, sims:160},
+  {icon:'&#128203;', name:'School of Accounting Sciences', folder:'accounting', category:'Finance & Investment', level:'Core', demand:'High',
+   desc:'Accounting, IFRS, reporting and accounting technologies.',
+   careers:['Financial Accountant','Reporting Manager','IFRS Specialist','Accounting Technologist'], labs:10, sims:200},
+  {icon:'&#127974;', name:'School of Banking & Financial Services', folder:'banking', category:'Finance & Investment', level:'Core', demand:'Very High',
+   desc:'Commercial banking, fintech, insurance and financial services.',
+   careers:['Relationship Manager','Fintech Analyst','Insurance Strategist','Banking Consultant'], labs:10, sims:210},
+  {icon:'&#128200;', name:'School of Economics & Public Policy', folder:'economics', category:'Public & Social', level:'Core', demand:'High',
+   desc:'Economics, policy analysis, development and macro strategy.',
+   careers:['Policy Analyst','Economic Consultant','Development Strategist','Macro Analyst'], labs:8, sims:160},
+  {icon:'&#128722;', name:'School of Retail & Digital Commerce', folder:'retail', category:'Marketing & Commerce', level:'Core', demand:'High',
+   desc:'Retail management, e-commerce and omnichannel business.',
+   careers:['Retail Manager','E-Commerce Strategist','Omnichannel Lead','Merchandising Analyst'], labs:9, sims:190},
+  {icon:'&#128270;', name:'School of Auditing & Assurance', folder:'auditing', category:'Governance & Risk', level:'Specialized', demand:'Emerging',
+   desc:'Internal audit, forensic audit, compliance and assurance.',
+   careers:['Internal Auditor','Forensic Auditor','Assurance Manager','Compliance Analyst'], labs:8, sims:150},
+  {icon:'&#128179;', name:'School of Taxation & Public Finance', folder:'taxation', category:'Public & Social', level:'Specialized', demand:'Emerging',
+   desc:'Tax planning, GST, international taxation and public finance.',
+   careers:['Tax Consultant','GST Specialist','International Tax Advisor','Public Finance Analyst'], labs:7, sims:140},
+  {icon:'&#127869;', name:'School of Hospitality & Service Management', folder:'hospitality', category:'Hospitality & Health', level:'Core', demand:'Emerging',
+   desc:'Hospitality, tourism, service excellence and experience management.',
+   careers:['Hospitality Manager','Tourism Strategist','Guest Experience Lead','Service Design Consultant'], labs:8, sims:160},
+  {icon:'&#127973;', name:'School of Healthcare & Pharmaceutical Business', folder:'healthcare-business', category:'Hospitality & Health', level:'Specialized', demand:'Emerging',
+   desc:'Healthcare management, pharmaceutical business and health economics.',
+   careers:['Healthcare Manager','Pharma Business Analyst','Health Economist','Hospital Administrator'], labs:8, sims:160}
+];
+
+var careerPaths = [
+  {glyph:'&#129302;', label:'Artificial Intelligence'},
+  {glyph:'&#128176;', label:'Finance'},
+  {glyph:'&#128203;', label:'Accounting'},
+  {glyph:'&#128640;', label:'Entrepreneurship'},
+  {glyph:'&#128188;', label:'Consulting'},
+  {glyph:'&#127974;', label:'Investment Banking'},
+  {glyph:'&#127919;', label:'Marketing'},
+  {glyph:'&#128202;', label:'Analytics'},
+  {glyph:'&#127811;', label:'ESG'},
+  {glyph:'&#9878;', label:'Leadership'},
+  {glyph:'&#128666;', label:'Supply Chain'},
+  {glyph:'&#128274;', label:'Cyber Governance'}
+];
+
+var demandClass = {'Very High':'very-high', 'High':'high', 'Emerging':'emerging'};
+
+/* ============================================================
+   RENDER HELPERS
+   ============================================================ */
+function el(html){ var d=document.createElement('div'); d.innerHTML=html.trim(); return d.firstChild; }
+
+/* ---- School cards ---- */
+var schoolGrid = document.getElementById('schoolGrid');
+function renderSchools(){
+  schoolGrid.innerHTML = '';
+  schools.forEach(function(s,i){
+    var careerChips = s.careers.map(function(c){ return '<span class="career-chip">'+c+'</span>'; }).join('');
+    var card = el(
+      '<div class="school-card reveal in" data-name="'+s.name.toLowerCase()+'" data-category="'+s.category+'" data-level="'+s.level+'" data-search="'+(s.name+' '+s.desc+' '+s.careers.join(' ')+' '+s.category).toLowerCase()+'">'+
+        '<div class="school-top">'+
+          '<div class="school-icon">'+s.icon+'</div>'+
+          '<span class="demand-badge '+demandClass[s.demand]+'">'+s.demand+' Demand</span>'+
+        '</div>'+
+        '<span class="school-cat-tag">'+s.category+'</span>'+
+        '<h3>'+s.name+'</h3>'+
+        '<p class="desc">'+s.desc+'</p>'+
+        '<div class="career-list">'+careerChips+'</div>'+
+        '<div class="school-meta">'+
+          '<span>&#129514; <b>'+s.labs+'</b> Labs</span>'+
+          '<span>&#9889; <b>'+s.sims+'+</b> Simulations</span>'+
+        '</div>'+
+        '<a href="schools/'+s.folder+'/index.html" class="btn btn-ghost btn-sm card-link" style="justify-content:center;">Explore School <span class="arrow">&#8594;</span></a>'+
+      '</div>'
+    );
+    schoolGrid.appendChild(card);
+  });
+}
+renderSchools();
+
+/* ---- Category & level chips ---- */
+var categoryChips = document.getElementById('categoryChips');
+var activeCategory = 'All';
+function renderCategoryChips(){
+  var all = ['All'].concat(CATEGORIES);
+  categoryChips.innerHTML = '';
+  all.forEach(function(c){
+    var chip = el('<button type="button" class="chip'+(c===activeCategory?' active':'')+'">'+c+'</button>');
+    chip.addEventListener('click', function(){
+      activeCategory = c;
+      categoryChips.querySelectorAll('.chip').forEach(function(x){ x.classList.remove('active'); });
+      chip.classList.add('active');
+      applyFilters();
+    });
+    categoryChips.appendChild(chip);
+  });
+}
+renderCategoryChips();
+
+var levelChips = document.getElementById('levelChips');
+var activeLevel = 'All';
+function renderLevelChips(){
+  var all = ['All'].concat(LEVELS);
+  levelChips.innerHTML = '';
+  all.forEach(function(lv){
+    var chip = el('<button type="button" class="chip'+(lv===activeLevel?' active':'')+'">'+lv+'</button>');
+    chip.addEventListener('click', function(){
+      activeLevel = lv;
+      levelChips.querySelectorAll('.chip').forEach(function(x){ x.classList.remove('active'); });
+      chip.classList.add('active');
+      applyFilters();
+    });
+    levelChips.appendChild(chip);
+  });
+}
+renderLevelChips();
+
+/* ---- Search + filter logic ---- */
+var schoolSearch = document.getElementById('schoolSearch');
+var resultsCount = document.getElementById('resultsCount');
+
+function applyFilters(){
+  var query = schoolSearch.value.trim().toLowerCase();
+  var cards = schoolGrid.querySelectorAll('.school-card');
+  var visible = 0;
+  cards.forEach(function(card){
+    var matchesQuery = !query || card.getAttribute('data-search').indexOf(query) !== -1;
+    var matchesCategory = activeCategory === 'All' || card.getAttribute('data-category') === activeCategory;
+    var matchesLevel = activeLevel === 'All' || card.getAttribute('data-level') === activeLevel;
+    var show = matchesQuery && matchesCategory && matchesLevel;
+    card.classList.toggle('hidden', !show);
+    if(show) visible++;
+  });
+  animateCountTo(resultsCount, visible);
+  var existingEmpty = schoolGrid.querySelector('.no-results');
+  if(visible === 0){
+    if(!existingEmpty){ schoolGrid.appendChild(el('<div class="no-results">No schools match your search. Try a different keyword or clear the filters.</div>')); }
+  } else if(existingEmpty){
+    existingEmpty.remove();
+  }
+}
+schoolSearch.addEventListener('input', applyFilters);
+
+function animateCountTo(node, target){
+  var current = parseInt(node.textContent, 10) || 0;
+  if(current === target) return;
+  var start = null, from = current, duration = 350;
+  function step(ts){
+    if(!start) start = ts;
+    var progress = Math.min((ts - start) / duration, 1);
+    node.textContent = Math.round(from + (target - from) * progress);
+    if(progress < 1) requestAnimationFrame(step);
+  }
+  requestAnimationFrame(step);
+}
+
+/* ---- Career path cards (click to filter search) ---- */
+var careerGrid = document.getElementById('careerGrid');
+careerPaths.forEach(function(c){
+  var card = el(
+    '<div class="career-path-card reveal in">'+
+      '<div class="glyph">'+c.glyph+'</div>'+
+      '<div class="label">'+c.label+'</div>'+
+    '</div>'
+  );
+  card.addEventListener('click', function(){
+    schoolSearch.value = c.label;
+    activeCategory = 'All'; activeLevel = 'All';
+    renderCategoryChips(); renderLevelChips();
+    applyFilters();
+    document.getElementById('schools').scrollIntoView({behavior:'smooth', block:'start'});
+  });
+  careerGrid.appendChild(card);
+});
+
+/* ============================================================
+   HEADER — sticky state + mobile nav + search popup
+   ============================================================ */
+var header = document.getElementById('siteHeader');
+var toTop = document.getElementById('toTop');
+window.addEventListener('scroll', function(){
+  header.classList.toggle('scrolled', window.scrollY > 30);
+  toTop.classList.toggle('show', window.scrollY > 700);
+});
+
+var burger = document.getElementById('burgerBtn');
+var mobileNav = document.getElementById('mobileNav');
+var navOverlay = document.getElementById('navOverlay');
+function closeMobile(){ burger.classList.remove('open'); mobileNav.classList.remove('open'); navOverlay.classList.remove('open'); }
+burger.addEventListener('click', function(){
+  var isOpen = mobileNav.classList.toggle('open');
+  burger.classList.toggle('open', isOpen);
+  navOverlay.classList.toggle('open', isOpen);
+});
+navOverlay.addEventListener('click', closeMobile);
+mobileNav.querySelectorAll('a').forEach(function(a){ a.addEventListener('click', closeMobile); });
+
+var searchOpen = document.getElementById('searchOpen');
+var searchPopup = document.getElementById('searchPopup');
+var globalSearchInput = document.getElementById('globalSearchInput');
+searchOpen.addEventListener('click', function(){
+  searchPopup.classList.add('open');
+  setTimeout(function(){ globalSearchInput.focus(); }, 100);
+});
+searchPopup.addEventListener('click', function(e){ if(e.target === searchPopup) searchPopup.classList.remove('open'); });
+globalSearchInput.addEventListener('keydown', function(e){
+  if(e.key === 'Enter' && globalSearchInput.value.trim()){
+    searchPopup.classList.remove('open');
+    schoolSearch.value = globalSearchInput.value.trim();
+    applyFilters();
+    document.getElementById('schools').scrollIntoView({behavior:'smooth', block:'start'});
+  }
+});
+document.addEventListener('keydown', function(e){
+  if(e.key === 'Escape'){ searchPopup.classList.remove('open'); closeMobile(); }
+});
+
+/* ============================================================
+   BACK TO TOP
+   ============================================================ */
+toTop.addEventListener('click', function(){ window.scrollTo({top:0, behavior:'smooth'}); });
+
+/* ============================================================
+   BUTTON RIPPLE EFFECT
+   ============================================================ */
+document.addEventListener('click', function(e){
+  var btn = e.target.closest ? e.target.closest('.btn') : null;
+  if(!btn) return;
+  var rect = btn.getBoundingClientRect();
+  var ripple = document.createElement('span');
+  ripple.className = 'ripple';
+  ripple.style.left = (e.clientX - rect.left) + 'px';
+  ripple.style.top = (e.clientY - rect.top) + 'px';
+  btn.appendChild(ripple);
+  setTimeout(function(){ ripple.remove(); }, 650);
+});
+
+/* ============================================================
+   ANIMATED COUNTERS — trigger on scroll into view
+   ============================================================ */
+var countersDoneMap = new WeakMap();
+function animateCounters(band){
+  var counters = band.querySelectorAll('.stat-num');
+  counters.forEach(function(counter){
+    if(countersDoneMap.get(counter)) return;
+    countersDoneMap.set(counter, true);
+    var target = parseInt(counter.getAttribute('data-count'), 10);
+    var duration = 1800;
+    var start = null;
+    function step(ts){
+      if(!start) start = ts;
+      var progress = Math.min((ts - start) / duration, 1);
+      var eased = 1 - Math.pow(1 - progress, 3);
+      var current = Math.floor(eased * target);
+      counter.textContent = current.toLocaleString() + (progress >= 1 ? '+' : '');
+      if(progress < 1) requestAnimationFrame(step);
+    }
+    requestAnimationFrame(step);
+  });
+}
+var statsBands = document.querySelectorAll('.stats-band');
+var statsIo = new IntersectionObserver(function(entries){
+  entries.forEach(function(entry){ if(entry.isIntersecting) animateCounters(entry.target); });
+}, {threshold:0.4});
+statsBands.forEach(function(b){ statsIo.observe(b); });
+
+/* ============================================================
+   SCROLL REVEAL — IntersectionObserver
+   ============================================================ */
+var io = new IntersectionObserver(function(entries){
+  entries.forEach(function(entry){
+    if(entry.isIntersecting){
+      entry.target.classList.add('in');
+      io.unobserve(entry.target);
+    }
+  });
+}, {threshold:0.12});
+document.querySelectorAll('.reveal').forEach(function(t){ io.observe(t); });
+
+/* ============================================================
+   FOOTER YEAR
+   ============================================================ */
+document.getElementById('year').textContent = new Date().getFullYear();
+
+/* ============================================================
+   HERO CANVAS — signature specimen-network animation
+   ============================================================ */
+var canvas = document.getElementById('labCanvas');
+var ctx = canvas.getContext('2d');
+var nodes = [];
+var NODE_COUNT = 42;
+var W, H;
+
+function resizeCanvas(){
+  var hero = document.querySelector('.hero');
+  W = canvas.width = hero.offsetWidth;
+  H = canvas.height = hero.offsetHeight;
+}
+function initNodes(){
+  nodes = [];
+  for(var i=0;i<NODE_COUNT;i++){
+    nodes.push({
+      x: Math.random()*W,
+      y: Math.random()*H,
+      vx: (Math.random()-0.5)*0.25,
+      vy: (Math.random()-0.5)*0.25,
+      r: Math.random()*1.6 + 1
+    });
+  }
+}
+var reducedMotion = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+function drawFrame(){
+  ctx.clearRect(0,0,W,H);
+  var linkDist = 150;
+  for(var i=0;i<nodes.length;i++){
+    var n = nodes[i];
+    n.x += n.vx; n.y += n.vy;
+    if(n.x < 0 || n.x > W) n.vx *= -1;
+    if(n.y < 0 || n.y > H) n.vy *= -1;
+
+    for(var j=i+1;j<nodes.length;j++){
+      var m = nodes[j];
+      var dx = n.x - m.x, dy = n.y - m.y;
+      var dist = Math.sqrt(dx*dx + dy*dy);
+      if(dist < linkDist){
+        ctx.strokeStyle = 'rgba(42,217,174,' + (0.16 * (1 - dist/linkDist)) + ')';
+        ctx.lineWidth = 1;
+        ctx.beginPath();
+        ctx.moveTo(n.x, n.y);
+        ctx.lineTo(m.x, m.y);
+        ctx.stroke();
+      }
+    }
+  }
+  for(var k=0;k<nodes.length;k++){
+    var p = nodes[k];
+    ctx.fillStyle = 'rgba(210,168,87,0.55)';
+    ctx.beginPath();
+    ctx.arc(p.x, p.y, p.r, 0, Math.PI*2);
+    ctx.fill();
+  }
+  if(!reducedMotion) requestAnimationFrame(drawFrame);
+}
+
+resizeCanvas();
+initNodes();
+drawFrame();
+window.addEventListener('resize', function(){
+  resizeCanvas();
+  initNodes();
+  if(reducedMotion) drawFrame();
+});
+
+/* ============================================================
+   SMOOTH SCROLL for in-page anchor links
+   ============================================================ */
+document.querySelectorAll('a[href^="#"]').forEach(function(a){
+  a.addEventListener('click', function(e){
+    var id = a.getAttribute('href');
+    if(id.length > 1){
+      var target = document.querySelector(id);
+      if(target){
+        e.preventDefault();
+        var offset = 84;
+        var top = target.getBoundingClientRect().top + window.pageYOffset - offset;
+        window.scrollTo({top: top, behavior:'smooth'});
+      }
+    }
+  });
+});
+
+})();
+</script>
+</body>
+</html>
